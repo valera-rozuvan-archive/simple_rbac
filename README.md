@@ -17,16 +17,10 @@ Authors:
     REMEDY
     Valera Rozuvan
 
-Contact emails:
-
-    farady@mail.ru
-    valera.rozuvan@gmail.com
-
 
 ==-----------------==
 || A - Description ||
 ==-----------------==
-
 
 
 ==------------------==
@@ -158,6 +152,7 @@ look something similar to the following:
         // display the login form
         $this->render('login', array('model'=> $model));
     }
+
 
 ==----------------==
 || C - Change log ||
