@@ -6,11 +6,11 @@
 
 Version:
 
-0.4
+    0.4
 
 Date:
 
-Mon Sep  3 16:47:22 EEST 2012
+    Mon Sep  3 16:47:22 EEST 2012
 
 Authors:
 
