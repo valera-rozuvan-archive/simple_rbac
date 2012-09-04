@@ -1,5 +1,6 @@
 ----------------------------------------------
 ---++++====== Simple RBAC module ======++++---
+
 __________________________for_Yii_____________
 
 
@@ -8,10 +9,12 @@ Date: Mon Sep  3 16:47:22 EEST 2012
 
 Authors:
     REMEDY
+
     Valera Rozuvan
 
 Contact emails:
     farady@mail.ru
+
     valera.rozuvan@gmail.com
 
 
@@ -31,6 +34,7 @@ Contact emails:
 2.) In the file 'protected/config/main.php', a few sub-arrays should be modified.
 
 a.) Setup Yii where to find new models, and also use Simple RBAC module:
+
     ...
     'import' => array(
         ...
