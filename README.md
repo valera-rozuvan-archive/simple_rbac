@@ -1,20 +1,21 @@
 ----------------------------------------------
 ---++++====== Simple RBAC module ======++++---
 
-__________________________for_Yii_____________
+---++++======            for Yii ======++++---
 
 
 Version: 0.4
+
 Date: Mon Sep  3 16:47:22 EEST 2012
 
 Authors:
-    REMEDY
 
+    REMEDY
     Valera Rozuvan
 
 Contact emails:
-    farady@mail.ru
 
+    farady@mail.ru
     valera.rozuvan@gmail.com
 
 
