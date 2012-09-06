@@ -67,4 +67,9 @@ class SRUser
 
         $auth->save();
     }
+
+    public static function checkAccess($operation)
+    {
+        return Yii::app()->authManager->checkAccess($operation, Yii::app()->user->getId());
+    }
 }

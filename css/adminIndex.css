@@ -1,0 +1,150 @@
+/*
+ *
+ * File: adminIndex.css
+ *
+ */
+
+#page
+{
+    display: block;
+
+    width:  800px;
+    height: 500px;
+
+    margin-top:   50px;
+    margin-left:  auto;
+    margin-right: auto;
+
+    border: 1px solid black;
+}
+
+.pageBlock
+{
+    width:   798px;
+    display: block;
+    border:  1px solid;
+    clear:   both;
+}
+
+.pageBlock.header
+{
+    height: 80px;
+
+    border-color: red;
+}
+
+.headerButton
+{
+    display: block;
+    height: 64px;
+    width: 64px;
+    border-width: 0px;
+    border: none;
+    margin: 8px 16px 8px 16px;
+    float: right;
+    outline: none;
+}
+
+.headerButton:focus, .headerButton::-moz-focus-inner
+{
+    border-width: 0px;
+    border: none;
+    outline: none;
+}
+
+.headerButton.logOut
+{
+    background: url('../images/logOutIcon64.png') no-repeat;
+}
+
+.headerButton.home
+{
+    background: url('../images/homeIcon64.png') no-repeat;
+}
+
+.pageBlock.body
+{
+    height: 374px;
+
+    border-color: green;
+}
+
+.bodyBlock
+{
+    height:  372px;
+    display: inline;
+    float:   left;
+    border:  1px solid;
+}
+
+.bodyBlock.menu
+{
+    width: 180px;
+    border-color: #ffff00;
+}
+
+.bodyBlock.chart
+{
+    width: 614px;
+
+    border-color: purple;
+}
+
+.pageBlock.footer
+{
+    height: 40px;
+
+    border-color: blue;
+}
+
+.menuButton
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #4a93a4;
+    width: 150px;
+    padding: 7px 10px;
+    color: rgba(9, 15, 30, 0.8);
+    text-transform: uppercase;
+    /*border: 1px solid #2c398d;*/
+    font-weight: bold;
+    font-size: 15px;
+    border-width: 0px;
+    border: none;
+    outline: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -border-radius: 3px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8), 0 -1px 0 rgba(25, 27, 9, 0.9);
+    -moz-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 5px 0 #3a79a4, 0 6px 0 #593a11, 0 13px 0 #ccc;
+    -webkit-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 5px 0 #3a79a4, 0 6px 0 #593a11, 0 13px 0 #ccc;
+    -box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.6), 0 5px 0 #3a79a4, 0 6px 0 #593a11, 0 13px 0 #ccc;
+    -webkit-transition: background 0.2s ease-out;
+}
+
+.menuButton:hover, .menuButton:focus, .menuButton::-moz-focus-inner {
+    background: #649eac;
+    /*border: 1px solid #186ca4;*/
+    border-width: 0px;
+    border: none;
+    outline: none;
+    -moz-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.7), inset 0 2px 1px rgba(255, 255, 255, 0.5), 0 5px 0 #4886b1, 0 6px 0 #593a11, 0 13px 0 #ccc;
+    -webkit-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.7), inset 0 2px 1px rgba(255, 255, 255, 0.5), 0 5px 0 #4886b1, 0 6px 0 #593a11, 0 13px 0 #ccc;
+    -box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.7), inset 0 2px 1px rgba(255, 255, 255, 0.5), 0 5px 0 #4886b1, 0 6px 0 #593a11, 0 13px 0 #ccc;
+}
+
+.menuButton:active {
+    background: #4a86a4;
+    /*border: 1px solid #183ea4;*/
+    border-width: 0px;
+    border: none;
+    outline: none;
+    position: relative;
+    top: 5px;
+    -moz-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 3px 0 #205993, 0 4px 0 #593a11, 0 8px 0 #ccc;
+    -webkit-box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 3px 0 #205993, 0 4px 0 #593a11, 0 8px 0 #ccc;
+    -box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 3px 0 #205993, 0 4px 0 #593a11, 0 8px 0 #ccc;
+}

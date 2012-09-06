@@ -6,11 +6,11 @@
 
 Version:
 
-    0.4
+    0.5
 
 Date:
 
-    Mon Sep  3 16:47:22 EEST 2012
+    Thu Sep  6 05:50:05 EEST 2012
 
 Authors:
 
@@ -157,6 +157,13 @@ look something similar to the following:
 ==----------------==
 || C - Change log ||
 ==----------------==
+
+[05.09.2012]
++ added logout action
++ added variables to AdminController which control the display of blocks in the template
++ added adminIndex.css - CSS styles for main template
++ created a simple admin interface - added ability logout, go to home, page, and menu buttons for future use
++ added checkAccess method to SRUser model
 
 [03.09.2012]
 + made significant changes to install/uninstall process

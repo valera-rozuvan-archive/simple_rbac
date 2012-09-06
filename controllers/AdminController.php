@@ -14,7 +14,15 @@ class AdminController extends CController
 {
     public $layout = 'main_rbac';
 
-    public $defaultAction = 'index';
+    // public $defaultAction = 'index';
+
+    public $modulePath = '/protected/modules/simple_rbac/';
+
+    public $useHeader = true;
+    public $useBody   = true;
+    public $useMenu   = true;
+    public $useChart  = true;
+    public $useFooter = true;
 
     public function actions()
     {
@@ -37,13 +45,13 @@ class AdminController extends CController
         return array(
             array(
                 'allow',
-                'actions' => array('index'),
-                'roles'   => array('admin'),
+                'actions' => array('index', 'logout',),
+                'roles'   => array('admin',),
             ),
             array(
                 'deny',
-                'actions' => array('index'),
-                'users'   => array('*'),
+                'actions' => array('index', 'logout'),
+                'users'   => array('*',),
             ),
         );
     }
@@ -73,6 +81,12 @@ class AdminController extends CController
             'index',
             array()
         );
+    }
+
+    public function actionLogout()
+    {
+        Yii::app()->user->logout();
+        $this->redirect(Yii::app()->homeUrl);
     }
 
     public function actionInstall()
