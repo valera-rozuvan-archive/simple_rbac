@@ -77,12 +77,12 @@ class Simple_rbacModule extends CWebModule
             $command = Yii::app()->db->createCommand($sql);
             $command->execute();
             $command->getPdoStatement()->closeCursor();
+
+            $this->createDefaultRoles();
+
+            SRUser::createRole('admin');
+            SRUser::createUser('admin', '1234', array('admin',));
         }
-
-        $this->createDefaultRoles();
-
-        SRUser::createRole('admin');
-        SRUser::createUser('admin', '1234', array('admin',));
 
         return $this->setupTableStatus();
     }
@@ -90,6 +90,9 @@ class Simple_rbacModule extends CWebModule
     public function uninstall()
     {
         if ($this->setupMode() === true) {
+            // logout the user, so that no conflict will arise after the support tables will be dropped
+            Yii::app()->user->logout();
+
             $tables = $this->getModuleDbTables();
 
             foreach ($tables as $tableName) {

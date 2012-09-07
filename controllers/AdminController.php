@@ -14,9 +14,9 @@ class AdminController extends CController
 {
     public $layout = 'main_rbac';
 
-    // public $defaultAction = 'index';
+    public $defaultAction = 'users';
 
-    public $modulePath = '/protected/modules/simple_rbac/';
+    public $modulePath = '/protected/modules/simple_rbac';
 
     public $useHeader = true;
     public $useBody   = true;
@@ -45,12 +45,12 @@ class AdminController extends CController
         return array(
             array(
                 'allow',
-                'actions' => array('index', 'logout',),
+                'actions' => array('users', 'logout',),
                 'roles'   => array('admin',),
             ),
             array(
                 'deny',
-                'actions' => array('index', 'logout'),
+                'actions' => array('users', 'logout'),
                 'users'   => array('*',),
             ),
         );
@@ -64,6 +64,7 @@ class AdminController extends CController
 
                 return false;
             }
+            $this->layout = 'blank';
         } else {
             if (in_array($action->id, array('install', 'uninstall',))) {
                 throw new CHttpException(403, 'The specified page cannot be found.');
@@ -75,10 +76,37 @@ class AdminController extends CController
         return true;
     }
 
-    public function actionIndex()
+    public function actionUsers()
+    {
+        $dataProvider = new CActiveDataProvider(
+            'SimpleRbacUsersDbTable',
+            array(
+                 'criteria'=>array(
+                     'select' => 'id, username, status, last_access, registered',
+                 ),
+            )
+        );
+
+        $this->render(
+            'users',
+            array(
+                 'dataProvider' => $dataProvider,
+            )
+        );
+    }
+
+    public function actionRoles()
     {
         $this->render(
-            'index',
+            'roles',
+            array()
+        );
+    }
+
+    public function actionPrivileges()
+    {
+        $this->render(
+            'privileges',
             array()
         );
     }

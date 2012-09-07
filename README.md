@@ -6,11 +6,11 @@
 
 Version:
 
-    0.5
+    0.6
 
 Date:
 
-    Thu Sep  6 05:50:05 EEST 2012
+    Fri Sep  7 06:41:26 EEST 2012
 
 Authors:
 
@@ -157,6 +157,14 @@ look something similar to the following:
 ==----------------==
 || C - Change log ||
 ==----------------==
+
+[06.09.2012]
++ removed 'index' action; added 'users', 'roles', and 'privileges' actions
++ 'users' action displays a table of users
++ fixed bug where CSS stylesheet was not properly included
++ added a layout (blank page) to display system information (install status, etc.)
++ fixed bug where when you tried to install, it always tried to create default roles, and admin user
++ now when you uninstall, it first logs you out
 
 [05.09.2012]
 + added logout action

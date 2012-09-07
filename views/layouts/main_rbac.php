@@ -10,10 +10,17 @@
  */
 ?>
 
-<html>
+<?
+$baseUrl = Yii::app()->baseUrl;
+$cs = Yii::app()->getClientScript();
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>This is the main layout of simple_rbac module</title>
-        <link type="text/css" rel="stylesheet" href="<?=$this->modulePath.'css/adminIndex.css'?>" />
+        <title>Admin</title>
+        <? $cs->registerCssFile($baseUrl.$this->modulePath.'/css/adminIndex.css') ?>
     </head>
     <body>
         <div id="page">
@@ -29,9 +36,9 @@
                 <div class="pageBlock body">
                     <? if ($this->useMenu): ?>
                         <div class="bodyBlock menu">
-                            <?=CHtml::button('Users', array('submit' => array('admin/index',), 'csrf' => true, 'class' => 'menuButton'))?>
-                            <?=CHtml::button('Roles', array('submit' => array('admin/index',), 'csrf' => true, 'class' => 'menuButton'))?>
-                            <?=CHtml::button('Privileges', array('submit' => array('admin/index',), 'csrf' => true, 'class' => 'menuButton'))?>
+                            <?=CHtml::button('Users', array('submit' => array('admin/users',), 'csrf' => true, 'class' => 'menuButton'))?>
+                            <?=CHtml::button('Roles', array('submit' => array('admin/roles',), 'csrf' => true, 'class' => 'menuButton'))?>
+                            <?=CHtml::button('Privileges', array('submit' => array('admin/privileges',), 'csrf' => true, 'class' => 'menuButton'))?>
                         </div>
                     <? endif ?>
                     <? if ($this->useChart): ?>
