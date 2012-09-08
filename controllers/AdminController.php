@@ -45,12 +45,12 @@ class AdminController extends CController
         return array(
             array(
                 'allow',
-                'actions' => array('users', 'logout',),
+                'actions' => array('users', 'roles', 'permissions', 'logout', 'test',),
                 'roles'   => array('admin',),
             ),
             array(
                 'deny',
-                'actions' => array('users', 'logout'),
+                'actions' => array('users', 'roles', 'permissions', 'logout', 'test',),
                 'users'   => array('*',),
             ),
         );
@@ -81,7 +81,7 @@ class AdminController extends CController
         $dataProvider = new CActiveDataProvider(
             'SimpleRbacUsersDbTable',
             array(
-                 'criteria'=>array(
+                 'criteria' => array(
                      'select' => 'id, username, status, last_access, registered',
                  ),
             )
@@ -97,17 +97,25 @@ class AdminController extends CController
 
     public function actionRoles()
     {
+        $rolesDP = new SimpleRbacRolesDataP();
+
         $this->render(
             'roles',
-            array()
+            array(
+                 'rolesDP' => $rolesDP,
+            )
         );
     }
 
-    public function actionPrivileges()
+    public function actionPermissions()
     {
+        $permissionsDP = new SimpleRbacPermissionsDataP();
+
         $this->render(
-            'privileges',
-            array()
+            'permissions',
+            array(
+                 'permissionsDP' => $permissionsDP,
+            )
         );
     }
 
@@ -138,6 +146,16 @@ class AdminController extends CController
             array(
                  'tableStatus' => $tableStatus,
             )
+        );
+    }
+
+    public function actionTest()
+    {
+        $this->layout = 'blank';
+
+        $this->render(
+            'test',
+            array()
         );
     }
 }

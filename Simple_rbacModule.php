@@ -13,6 +13,7 @@
 class Simple_rbacModule extends CWebModule
 {
     public $setup = 0;
+    public $simple_rbacVersion = '0.7';
 
     public function install()
     {
@@ -79,9 +80,7 @@ class Simple_rbacModule extends CWebModule
             $command->getPdoStatement()->closeCursor();
 
             $this->createDefaultRoles();
-
-            SRUser::createRole('admin');
-            SRUser::createUser('admin', '1234', array('admin',));
+            $this->createAdminUser();
         }
 
         return $this->setupTableStatus();
@@ -187,5 +186,12 @@ class Simple_rbacModule extends CWebModule
         $auth->createRole('authenticated', 'authenticated user', $bizRule);
 
         $auth->save();
+    }
+
+    private function createAdminUser()
+    {
+        SRUser::createRole('admin', 'Top administrative role.');
+        SRUser::assignChildRole('admin', 'authenticated');
+        SRUser::createUser('admin', '1234', array('admin',));
     }
 }

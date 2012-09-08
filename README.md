@@ -6,11 +6,11 @@
 
 Version:
 
-    0.6
+    0.7
 
 Date:
 
-    Fri Sep  7 06:41:26 EEST 2012
+    Sat Sep  8 13:27:11 EEST 2012
 
 Authors:
 
@@ -41,6 +41,7 @@ a.) Setup Yii where to find new models, and also use Simple RBAC module:
         'application.modules.simple_rbac.components.*',
         'application.modules.simple_rbac.models.forms.*',
         'application.modules.simple_rbac.models.db_tables.*',
+        'application.modules.simple_rbac.models.data_providers.*',
     ),
     ...
     'modules' => array(
@@ -157,6 +158,18 @@ look something similar to the following:
 ==----------------==
 || C - Change log ||
 ==----------------==
+
+[08.09.2012]
++ creation of default admin user has been moved to a separate method
++ 'authenticated' role is now a child of 'admin' role
++ added to 'Simple_rbacModule' model the current version of the module
++ added to the main layout display of current module version, and a link to it's page on GitHub
++ changed 'Privileges' to 'Permissions'
++ added data provider classes for user roles, and user permissions
++ implemented proper display of 'Roles', and 'Permissions' pages
++ added methods 'createPermission', 'assignPermission', and 'assignChildRole' to SRUser model
++ SRUser method 'createRole' now accepts a parameter to set a description for the role
++ added action 'test' for the purpose of running several tests, and seeing results not in the main layout
 
 [06.09.2012]
 + removed 'index' action; added 'users', 'roles', and 'privileges' actions

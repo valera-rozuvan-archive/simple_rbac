@@ -97,6 +97,17 @@
     border-color: blue;
 }
 
+.pageBlock.footer .moduleInfo
+{
+    display: block;
+
+    text-align: center;
+
+    margin-top:   10px;
+    margin-right: auto;
+    margin-left:  auto;
+}
+
 .menuButton
 {
     display: block;

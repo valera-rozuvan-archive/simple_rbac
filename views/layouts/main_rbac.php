@@ -38,7 +38,7 @@ $cs = Yii::app()->getClientScript();
                         <div class="bodyBlock menu">
                             <?=CHtml::button('Users', array('submit' => array('admin/users',), 'csrf' => true, 'class' => 'menuButton'))?>
                             <?=CHtml::button('Roles', array('submit' => array('admin/roles',), 'csrf' => true, 'class' => 'menuButton'))?>
-                            <?=CHtml::button('Privileges', array('submit' => array('admin/privileges',), 'csrf' => true, 'class' => 'menuButton'))?>
+                            <?=CHtml::button('Permissions', array('submit' => array('admin/permissions',), 'csrf' => true, 'class' => 'menuButton'))?>
                         </div>
                     <? endif ?>
                     <? if ($this->useChart): ?>
@@ -51,7 +51,7 @@ $cs = Yii::app()->getClientScript();
 
             <? if ($this->useFooter): ?>
                 <div class="pageBlock footer">
-
+                    <div class="moduleInfo"><a href="https://github.com/valera-rozuvan/simple_rbac">Simple RBAC module</a> v<?=$this->module->simple_rbacVersion?></div>
                 </div>
             <? endif ?>
 

@@ -11,25 +11,10 @@
 ?>
 
 <?
-$password = '1234';
+$this->widget(
+    'zii.widgets.grid.CGridView',
+    array(
+         'dataProvider' => $rolesDP,
+    )
+);
 ?>
-
-Hello, world! from simple_rbac module, default controller, index action.<br />
-<br />
-Password: <?=$password?><br />
-Hashed password: <?=crypt($password)?><br />
-<br />
-Current user ID is <?=Yii::app()->user->getId()?><br />
-<br />
-Roles:<br />
-<?=print_r(array_keys(Yii::app()->authManager->roles), true)?><br />
-<br />
-Default roles:<br />
-<?=print_r(Yii::app()->authManager->defaultRoles, true)?><br />
-<br />
-Is guest: <?=(Yii::app()->authManager->checkAccess('guest', Yii::app()->user->getId())) ? 'true' : 'false'?><br />
-<br />
-Is authenticated: <?=(Yii::app()->authManager->checkAccess('authenticated', Yii::app()->user->getId())) ? 'true' : 'false'?><br />
-<br />
-Is admin: <?=(Yii::app()->authManager->checkAccess('admin', Yii::app()->user->getId())) ? 'true' : 'false'?><br />
-<br />
