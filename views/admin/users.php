@@ -17,8 +17,35 @@ $this->widget(
     array(
         'dataProvider' => $dataProvider,
         'columns' => array(
-            'id', 'username', 'status', 'last_access', 'registered',
+            'id',
+            array(
+                'name'  => 'username',
+                'headerHtmlOptions' => array(
+                    'colspan' => '2',
+                ),
+            ),
+            array(
+                'type'  => 'raw',
+                'value' => '($data->username !== "admin") ? "<div class=\"gridActionIcon deleteUser\" value=\"" . $data->id . "\"></div>" : ""',
+                'headerHtmlOptions' => array(
+                    'style' => 'display: none;',
+                ),
+            ),
+            array(
+                'name' => 'status',
+                'type' => 'html',
+                'value' => '(intval($data->status) === 1) ? "<span class=\"status active\">active</span>" : "<span class=\"status inactive\">inactive</span>"',
+            ),
+            array(
+                'name' => 'last_access',
+                'value' => '(preg_match("/^1970-01-01/", $data->last_access)) ? "never" : $data->last_access',
+            ),
+            'registered',
         ),
     )
 );
 ?>
+
+<br />
+
+<?=CHtml::button('', array('submit' => array('admin/newUser',), 'csrf' => true, 'class' => 'createNewAction user'))?>

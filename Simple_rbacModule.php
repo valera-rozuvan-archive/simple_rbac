@@ -13,7 +13,7 @@
 class Simple_rbacModule extends CWebModule
 {
     public $setup = 0;
-    public $simple_rbacVersion = '0.7';
+    public $simple_rbacVersion = '0.8';
 
     public function install()
     {
@@ -27,7 +27,8 @@ class Simple_rbacModule extends CWebModule
                     `status`      TINYINT (1) NOT NULL DEFAULT '1' COMMENT 'Whether the user account is asctive and the user can log in. 1 - active, 0 - inactive.',
                     `last_access` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'The date and time when the user last logged in.',
                     `registered`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'The date and time when this user was registered in the system.',
-                    PRIMARY KEY (`id`)
+                    PRIMARY KEY (`id`),
+                    UNIQUE KEY `uk_username` (`username`)
                 )
                 ENGINE = InnoDB
                 DEFAULT CHARSET = utf8
@@ -180,10 +181,10 @@ class Simple_rbacModule extends CWebModule
         $auth = Yii::app()->authManager;
 
         $bizRule = 'return Yii::app()->user->isGuest;';
-        $auth->createRole('guest', 'guest user', $bizRule);
+        $auth->createRole('guest', 'Guest user.', $bizRule);
 
         $bizRule = 'return !Yii::app()->user->isGuest;';
-        $auth->createRole('authenticated', 'authenticated user', $bizRule);
+        $auth->createRole('authenticated', 'Authenticated user.', $bizRule);
 
         $auth->save();
     }

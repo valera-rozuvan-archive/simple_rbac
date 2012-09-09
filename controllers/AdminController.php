@@ -45,12 +45,12 @@ class AdminController extends CController
         return array(
             array(
                 'allow',
-                'actions' => array('users', 'roles', 'permissions', 'logout', 'test',),
+                'actions' => array('users', 'roles', 'permissions', 'logout', 'test', 'newUser',),
                 'roles'   => array('admin',),
             ),
             array(
                 'deny',
-                'actions' => array('users', 'roles', 'permissions', 'logout', 'test',),
+                'actions' => array('users', 'roles', 'permissions', 'logout', 'test', 'newUser',),
                 'users'   => array('*',),
             ),
         );
@@ -155,6 +155,43 @@ class AdminController extends CController
 
         $this->render(
             'test',
+            array()
+        );
+    }
+
+    public function actionNewUser()
+    {
+        $model = new SimpleRbacNewUserForm();
+
+        if (isset($_POST['SimpleRbacNewUserForm'])) {
+            $model->attributes = $_POST['SimpleRbacNewUserForm'];
+
+            if ($model->validate()) {
+                SRUser::createUser($model->username, $model->password);
+                $this->redirect('users');
+            }
+        }
+
+        $this->render(
+            'newUser',
+            array(
+                 'model' => $model,
+            )
+        );
+    }
+
+    public function actionNewRole()
+    {
+        $this->render(
+            'newRole',
+            array()
+        );
+    }
+
+    public function actionNewPermission()
+    {
+        $this->render(
+            'newPermission',
             array()
         );
     }

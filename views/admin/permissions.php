@@ -15,6 +15,30 @@ $this->widget(
     'zii.widgets.grid.CGridView',
     array(
          'dataProvider' => $permissionsDP,
+         'columns' => array(
+             array(
+                 'name' => 'Name',
+                 'value' => '$data["name"]',
+                 'headerHtmlOptions' => array(
+                     'colspan' => '2',
+                 ),
+             ),
+             array(
+                 'type'  => 'raw',
+                 'value' => '"<div class=\"gridActionIcon deletePermission\" value=\"" . $data["name"] . "\"></div>"',
+                 'headerHtmlOptions' => array(
+                     'style' => 'display: none;',
+                 ),
+             ),
+             array(
+                 'name' => 'Description',
+                 'value' => '$data["description"]',
+             ),
+         ),
     )
 );
 ?>
+
+<br />
+
+<?=CHtml::button('', array('submit' => array('admin/newPermission',), 'csrf' => true, 'class' => 'createNewAction permission'))?>

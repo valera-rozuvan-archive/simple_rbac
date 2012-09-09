@@ -3,14 +3,13 @@
 
 ---++++================= for Yii ======++++---
 
-
 Version:
 
-    0.7
+    0.8
 
 Date:
 
-    Sat Sep  8 13:27:11 EEST 2012
+    Sun Sep  9 10:32:50 EEST 2012
 
 Authors:
 
@@ -18,9 +17,11 @@ Authors:
     Valera Rozuvan
 
 
+
 ==-----------------==
 || A - Description ||
 ==-----------------==
+
 
 
 ==------------------==
@@ -32,7 +33,7 @@ Authors:
 
 2.) In the file 'protected/config/main.php', a few sub-arrays should be modified.
 
-a.) Setup Yii where to find new models, and also use Simple RBAC module:
+a.) Instruct Yii where to find Simple RBAC model classes, and tell Yii of the existence of the module:
 
     ...
     'import' => array(
@@ -53,7 +54,7 @@ a.) Setup Yii where to find new models, and also use Simple RBAC module:
     ...
 
 b.) Make sure Yii's database connection settings are configured properly. Simple RBAC module requires a database
-connection to store the necessary tables and data. For example (in the file 'protected/config/main.php'):
+connection to store the necessary tables and data. For example:
 
     ...
     'components' => array(
@@ -62,8 +63,8 @@ connection to store the necessary tables and data. For example (in the file 'pro
             'class'            => 'CDbConnection',
             'connectionString' => 'mysql:host=localhost;port=3306;dbname=test_database',
             'emulatePrepare'   => true,
-            'username'         => 'username',
-            'password'         => 'password',
+            'username'         => 'sample_user',
+            'password'         => 'user_password',
             'charset'          => 'utf8',
             'tablePrefix'      => 'tbl_',
         ),
@@ -71,16 +72,18 @@ connection to store the necessary tables and data. For example (in the file 'pro
     ),
     ...
 
-NOTE: Simple RBAC module will work with a database prefix or without it. So, a table prefix is optional, and is not
-required. If your database tables do not use a table prefix, set it to an empty string. I.e.:
+This assumes that there is a MysSQL server running at localhost (port 3306), and that a database named 'test_database'
+exists, and is accessible by user 'sample_user' (with password 'user_password').
+
+NOTE: Simple RBAC module will work with a database table prefix or without it. So, a table prefix is optional, and
+is not required. If your database tables do not use a table prefix, set it to an empty string. I.e.:
 
     'tablePrefix' => '',
 
-This is a must, because when table names are specified wrapped in {{ and }}, and the 'tablePrefix' is not set, Yii
+This is a must. If table names are specified by wrapping them in {{ and }}, and the 'tablePrefix' is not set, Yii
 behaves strangely.
 
-c.) Tell the 'authManager' component to use table prefixes by specifying the necessary configuration settings (in the
-file 'protected/config/main.php'):
+c.) Tell the 'authManager' component to use table prefixes, and declare two default user roles:
 
     ...
     'components' => array(
@@ -100,7 +103,7 @@ file 'protected/config/main.php'):
     ),
     ...
 
-3.) Commence the internal install procedure by going to
+3.) Commence the internal install procedure by going to:
 
     http://your-site.com/simple_rbac/admin/install
 
@@ -110,25 +113,18 @@ enabled, then you probably will have to access the install action via:
     http://your-site.com/index.php?r=simple_rbac/admin/install
 
 You will get a list of tables, along with their status ('exists', or 'does not exist'). If all tables are marked as
-'exists', then the installation went successfully. If something went wrong, you can try uninstalling (see step 5
-below), and repeating the whole process.
+'exists', then the installation went successfully. If something went wrong, you can try uninstalling (see section
+'D - Uninstall' below), and repeating the whole process.
 
-4.) If the installation action was successful, comment out, or remove configuration setting:
+If the installation action was successful, comment out (or remove) the following configuration setting:
 
     'setup' => true,
 
 in the sub-array 'simple_rbac' in file 'protected/config/main.php'. Until you do that, you will not be able to access
 the administration panel of Simple RABC module. It is a safety percussion.
 
-5.) To uninstall (i.e. remove all created tables and their data), go to
-
-    http://your-site.com/simple_rbac/admin/uninstall
-
-You should get a list of tables, along with their statuses. If everything went well, each table should be marked as
-'does not exist'.
-
-6.) Last but not least, modify the default login action to use this module's SimpleRbacLoginForm model. It should
-look something similar to the following:
+4.) Modify the site's controller default login action (or whatever action used for logging in at your site) to use
+this module's 'SimpleRbacLoginForm' model. It should look something similar to the following:
 
     /**
      * Displays the login page
@@ -154,10 +150,53 @@ look something similar to the following:
         $this->render('login', array('model'=> $model));
     }
 
+5.) Optionally, add a menu entry for easy access to the Simple RBAC module's administration page:
+
+    $this->widget(
+        'zii.widgets.CMenu',
+        array(
+            'items' => array(
+                ...
+                array(
+                    'label'   => Yii::t('main','Admin'),
+                    'url'     => array('/simple_rbac/admin/users'),
+                    'visible' => SRUser::checkAccess('admin')
+                ),
+                ...
+            ),
+        )
+    );
+
+
 
 ==----------------==
-|| C - Change log ||
+|| D - Uninstall ||
 ==----------------==
+
+To uninstall (i.e. remove all created tables and their data), go to:
+
+    http://your-site.com/simple_rbac/admin/uninstall
+
+You should get a list of tables, along with their statuses. If everything went well, each table should be marked as
+'does not exist'.
+
+After the uninstall action has run successfully, you can remove the module's directory
+
+    protected/modules/simple_rbac/
+
+and undo all the changes that you have made to the 'protected/config/main.php' file, and your login action.
+
+
+
+==----------------==
+|| E - Change log ||
+==----------------==
+
+[09.09.2012]
++ added ability to create a new user
++ added pages for creation of a new role, and a new permission; for now forms are missing
++ added image buttons to the users, roles, and privileges table; for now they are not linked to any action
++ added a unique key on the 'username' column in DB table '{{simple_rbac_users}}'
 
 [08.09.2012]
 + creation of default admin user has been moved to a separate method
@@ -170,6 +209,9 @@ look something similar to the following:
 + added methods 'createPermission', 'assignPermission', and 'assignChildRole' to SRUser model
 + SRUser method 'createRole' now accepts a parameter to set a description for the role
 + added action 'test' for the purpose of running several tests, and seeing results not in the main layout
++ updated README.md for easier setup process
++ added '.htaccess' files to 'css', and 'images' directories which allow the access of files inside
++ slight change to default role descriptions
 
 [06.09.2012]
 + removed 'index' action; added 'users', 'roles', and 'privileges' actions

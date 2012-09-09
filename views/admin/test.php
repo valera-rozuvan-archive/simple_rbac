@@ -13,6 +13,10 @@
 Test.<br />
 
 <?
+SRUser::createUser('admin', 'zzz');
+?>
+
+<?
 SRUser::createPermission('anotherPermission4', 'Permission n 4.');
 SRUser::assignPermission('admin', 'anotherPermission4');
 

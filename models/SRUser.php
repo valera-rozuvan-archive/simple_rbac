@@ -26,11 +26,14 @@ class SRUser
 
     public static function createUser($username, $password, $roles = array())
     {
+        if (self::getUser($username) !== null)
+            return;
+
         $user = new SimpleRbacUsersDbTable();
 
         $user->username    = $username;
         $user->password    = $user->hashPassword($password);
-        $user->last_access = date('Y-m-d H:i:s', time());
+        $user->last_access = date('Y-m-d H:i:s', 0);
 
         if ($user->save()) {
             if (!empty($roles)) {
@@ -38,13 +41,13 @@ class SRUser
 
                 foreach ($roles as $role) {
                     if (in_array($role, $auth->defaultRoles)) {
-                        // $role is a default role, not assigning
+                        // The $role is a default role, not assigning.
                         continue;
                     } else if (!in_array($role, array_keys($auth->roles))) {
-                        // $role does not exist, not assigning
+                        // The role $role does not exist, not assigning.
                         continue;
                     } else if ($auth->checkAccess($role, $user->id)) {
-                        // $role is already assigned to the user
+                        // The $role is already assigned to the user with $username.
                         continue;
                     }
 
