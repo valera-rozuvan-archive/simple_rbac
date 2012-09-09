@@ -168,7 +168,7 @@ class AdminController extends CController
 
             if ($model->validate()) {
                 SRUser::createUser($model->username, $model->password);
-                $this->redirect('users');
+                $this->redirect(array('admin/users',));
             }
         }
 
