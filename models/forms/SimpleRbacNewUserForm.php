@@ -17,8 +17,8 @@ class SimpleRbacNewUserForm extends CFormModel
     public function rules()
     {
         return array(
-            array('username', 'ValidatorUsername'),
-            array('password', 'ValidatorPassword'),
+            array('username', 'ValidatorUsername',),
+            array('password', 'ValidatorPassword',),
         );
     }
 

@@ -24,9 +24,18 @@ $this->widget(
                     'colspan' => '2',
                 ),
             ),
-            array(
-                'type'  => 'raw',
-                'value' => '($data->username !== "admin") ? "<div class=\"gridActionIcon deleteUser\" value=\"" . $data->id . "\"></div>" : ""',
+            array
+            (
+                'class'    => 'CButtonColumn',
+                'template' => '{delete}',
+                'buttons' => array(
+                    'delete' => array
+                    (
+                        'imageUrl' => $modulePath.'/images/deleteIcon24.png',
+                        'url'      => 'Yii::app()->createUrl("admin/delete", array("type" => "user", "name" => $data->username,))',
+                        'visible'  => '!in_array($data->username, array("admin",))',
+                    ),
+                ),
                 'headerHtmlOptions' => array(
                     'style' => 'display: none;',
                 ),

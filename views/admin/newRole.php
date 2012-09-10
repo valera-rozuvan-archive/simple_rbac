@@ -10,4 +10,13 @@
  */
 ?>
 
-New role.
+<?=CHtml::beginForm()?>
+<?=CHtml::errorSummary($model)?>
+<?=CHtml::activeLabel($model, 'roleName')?><br />
+<?=CHtml::activeTextField($model, 'roleName')?><br />
+<br />
+<?=CHtml::activeLabel($model, 'description')?><br />
+<?=CHtml::activeTextField($model, 'description')?><br />
+<br />
+<?=CHtml::submitButton('Create new role')?>
+<?=CHtml::endForm()?>

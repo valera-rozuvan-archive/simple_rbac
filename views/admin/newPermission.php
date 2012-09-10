@@ -10,4 +10,13 @@
  */
 ?>
 
-New permission.
+<?=CHtml::beginForm()?>
+<?=CHtml::errorSummary($model)?>
+<?=CHtml::activeLabel($model, 'permissionName')?><br />
+<?=CHtml::activeTextField($model, 'permissionName')?><br />
+<br />
+<?=CHtml::activeLabel($model, 'description')?><br />
+<?=CHtml::activeTextField($model, 'description')?><br />
+<br />
+<?=CHtml::submitButton('Create new permission')?>
+<?=CHtml::endForm()?>

@@ -12,11 +12,11 @@
 
 <?=CHtml::beginForm()?>
 <?=CHtml::errorSummary($model)?>
-<?=CHtml::activeLabel($model,'username')?><br />
-<?=CHtml::activeTextField($model,'username')?><br />
+<?=CHtml::activeLabel($model, 'username')?><br />
+<?=CHtml::activeTextField($model, 'username')?><br />
 <br />
-<?=CHtml::activeLabel($model,'password')?><br />
-<?=CHtml::activePasswordField($model,'password')?><br />
+<?=CHtml::activeLabel($model, 'password')?><br />
+<?=CHtml::activePasswordField($model, 'password')?><br />
 <br />
 <?=CHtml::submitButton('Create new user')?>
 <?=CHtml::endForm()?>

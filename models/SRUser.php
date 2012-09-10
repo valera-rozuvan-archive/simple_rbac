@@ -59,6 +59,24 @@ class SRUser
         }
     }
 
+    public static function deleteUser($username)
+    {
+        $user = SRUser::getUser($username);
+
+        if ($user === null) {
+            // $username does not belong to any user
+            return;
+        }
+
+        $auth = Yii::app()->authManager;
+        $userRoles = array_keys($auth->getAuthItems(2, $user->id));
+        foreach ($userRoles as $userRole)
+            $auth->revoke($userRole, $user->id);
+        $auth->save();
+
+        $user->delete();
+    }
+
     public static function createRole($role, $description = '')
     {
         $auth = Yii::app()->authManager;
@@ -69,11 +87,32 @@ class SRUser
         } else if (in_array($role, array_keys($auth->roles))) {
             // $role already exists, not creating
             return;
+        } else if (in_array($role, array_keys($auth->getAuthItems(0)))) {
+            // $role is already a permission; can't have the same named role and permission
+            return;
         }
 
         $auth->createRole($role, $description);
 
         $auth->save();
+    }
+
+    public static function deleteRole($role)
+    {
+        $auth = Yii::app()->authManager;
+
+        if (in_array($role, $auth->defaultRoles)) {
+            // $role is a default role, not deleting
+            return;
+        } else if (!in_array($role, array_keys($auth->roles))) {
+            // $role does not exists, not deleting
+            return;
+        }
+
+        $auth->removeAuthItem($role);
+
+        // NOTE: We must not call $auth->save() because then it restores to the DB the initial state of authManager.
+        // I.e. - it will un-delete the role we just deleted! We certainly don't want that happening =)
     }
 
     public static function createPermission($permission, $description = '')
@@ -83,11 +122,29 @@ class SRUser
         if (in_array($permission, array_keys($auth->getAuthItems(0)))) {
             // $permission already exists, not creating
             return;
+        } else if (in_array($permission, array_keys($auth->roles))) {
+            // $permission is already a role; can't have the same named permission and role
+            return;
         }
 
         $auth->createOperation($permission, $description);
 
         $auth->save();
+    }
+
+    public static function deletePermission($permission)
+    {
+        $auth = Yii::app()->authManager;
+
+        if (!in_array($permission, array_keys($auth->getAuthItems(0)))) {
+            // $permission does not exists, not deleting
+            return;
+        }
+
+        $auth->removeAuthItem($permission);
+
+        // NOTE: We must not call $auth->save() because then it restores to the DB the initial state of authManager.
+        // I.e. - it will un-delete the permission we just deleted! We certainly don't want that happening =)
     }
 
     public static function assignPermission($role, $permission)

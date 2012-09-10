@@ -13,10 +13,95 @@
 Test.<br />
 
 <?
-SRUser::createUser('admin', 'zzz');
+
+// SRUser::deleteRole('newRole');
+
+/*
+$auth = Yii::app()->authManager;
+$output = $auth->removeAuthItem('newRole');
+
+echo 'removed: ';
+if ($output === true)
+    echo 'true';
+else
+    echo 'false';
+echo '<br />';
+
+// $auth->save();
+*/
+/*
+
+$command = Yii::app()->db->createCommand()
+                      ->delete('{{AuthItemChild}}',
+                               'child=:name',
+                               array(':name'=>'newRole'));
+$command->execute();
+$command->getPdoStatement()->closeCursor();
+*/
+/*
+$command = Yii::app()->db->createCommand()
+    ->delete('{{AuthItemChild}}',
+             'parent=:name',
+             array(':name'=>'newRole'));
+$command->execute();
+$command->getPdoStatement()->closeCursor();
+
+$command = Yii::app()->db->createCommand()
+    ->delete('{{AuthAssignment}}',
+             'itemname=:name',
+             array(':name'=>'newRole'));
+$command->execute();
+$command->getPdoStatement()->closeCursor();
+*/
+/*
+$command = Yii::app()->db->createCommand()
+    ->delete('{{AuthItem}}',
+             'name=:name',
+             array(':name'=>'newRole'));
+$command->execute();
+$command->getPdoStatement()->closeCursor();
+*/
+
+?>
+
+
+<?
+/*
+$username = 'admin';
+
+$user = SRUser::getUser($username);
+
+if ($user === null) {
+    echo 'User "'.$username.'" does not exist.<br />';
+} else {
+    $auth = Yii::app()->authManager;
+
+    $userRoles = array_keys($auth->getAuthItems(2, $user->id));
+
+    foreach ($userRoles as $userRole)
+        echo $userRole.', ';
+}
+*/
 ?>
 
 <?
+/*
+echo CHtml::button('Delete', array('submit' => array('admin/delete', 'type' => 'user', 'name' => 'testUserName',), 'csrf' => true, 'class' => 'headerButton logOut'))
+*/
+?>
+
+<br />
+asa
+<br />
+
+<?
+/*
+SRUser::createUser('admin', 'zzz');
+*/
+?>
+
+<?
+/*
 SRUser::createPermission('anotherPermission4', 'Permission n 4.');
 SRUser::assignPermission('admin', 'anotherPermission4');
 
@@ -24,6 +109,10 @@ SRUser::assignChildRole('admin', 'authenticated');
 SRUser::createRole('newRole', 'this is a new role');
 
 SRUser::assignChildRole('admin', 'newRole');
+SRUser::createRole('subRole', 'Sub role of new role');
+SRUser::assignChildRole('newRole', 'subRole');
+
+SRUser::createUser('grand', 'lll', array('newRole'));
 
 SRUser::createPermission('coolPermission', 'you can do cool things with this permission');
 SRUser::assignPermission('newRole', 'coolPermission');
@@ -37,13 +126,16 @@ $roleInfo = array(
 );
 
 print_r($roleInfo);
+*/
 ?>
 
 <br /><br />
 
 <?
+/*
 $permissions = Yii::app()->authManager->getAuthItems(0);
 print_r(array_keys($permissions));
+*/
 ?>
 
 <br /><br />
@@ -57,7 +149,9 @@ User also has 'guest' permissions: <?=(SRUser::checkAccess('guest')) ? 'true' : 
 <br /><br />
 
 <?
+
 $password = '1234';
+
 ?>
 
 Hello, world! from simple_rbac module, default controller, index action.<br />

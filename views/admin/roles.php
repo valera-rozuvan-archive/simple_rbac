@@ -23,19 +23,29 @@ $this->widget(
                     'colspan' => '2',
                 ),
             ),
-            array(
-                'type'  => 'raw',
-                'value' => '(!in_array($data["name"], array("admin", "authenticated", "guest",))) ? "<div class=\"gridActionIcon deleteRole\" value=\"" . $data["name"] . "\"></div>" : ""',
+            array
+            (
+                'class'    => 'CButtonColumn',
+                'template' => '{delete}',
+                'buttons' => array(
+                    'delete' => array
+                    (
+                        'imageUrl' => $modulePath.'/images/deleteIcon24.png',
+                        'url'      => 'Yii::app()->createUrl("admin/delete", array("type" => "role", "name" => $data["name"],))',
+                        'visible'  => '!in_array($data["name"], array("admin", "authenticated", "guest",))',
+                    ),
+                ),
                 'headerHtmlOptions' => array(
                     'style' => 'display: none;',
                 ),
             ),
             /*
             array(
-                'name'  => 'Default',
-                'value' => '$data["default"]',
                 'type'  => 'raw',
-                'value' => '($data["default"] === "y") ? "<div class=\"gridActionIcon checkSelected\"></div>" : ""',
+                'value' => '(!in_array($data["name"], array("admin", "authenticated", "guest",))) ? "<div class=\"gridActionIcon deleteRole\" value=\"" . $data["name"] . "\"></div>" : ""',
+                'headerHtmlOptions' => array(
+                    'style' => 'display: none;',
+                ),
             ),
             */
             array(

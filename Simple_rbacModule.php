@@ -13,7 +13,7 @@
 class Simple_rbacModule extends CWebModule
 {
     public $setup = 0;
-    public $simple_rbacVersion = '0.8';
+    public $simple_rbacVersion = '0.9';
 
     public function install()
     {

@@ -45,12 +45,22 @@ class AdminController extends CController
         return array(
             array(
                 'allow',
-                'actions' => array('users', 'roles', 'permissions', 'logout', 'test', 'newUser',),
+                'actions' => array(
+                    'users', 'roles', 'permissions',
+                    'logout', 'test',
+                    'newUser', 'newRole', 'newPermission',
+                    'delete',
+                ),
                 'roles'   => array('admin',),
             ),
             array(
                 'deny',
-                'actions' => array('users', 'roles', 'permissions', 'logout', 'test', 'newUser',),
+                'actions' => array(
+                    'users', 'roles', 'permissions',
+                    'logout', 'test',
+                    'newUser', 'newRole', 'newPermission',
+                    'delete',
+                ),
                 'users'   => array('*',),
             ),
         );
@@ -84,12 +94,16 @@ class AdminController extends CController
                  'criteria' => array(
                      'select' => 'id, username, status, last_access, registered',
                  ),
+                 'pagination' => array(
+                     'pageSize' => 4,
+                 ),
             )
         );
 
         $this->render(
             'users',
             array(
+                 'modulePath'   => $this->modulePath,
                  'dataProvider' => $dataProvider,
             )
         );
@@ -97,11 +111,18 @@ class AdminController extends CController
 
     public function actionRoles()
     {
-        $rolesDP = new SimpleRbacRolesDataP();
+        $rolesDP = new SimpleRbacRolesDataP(
+            array(
+                 'pagination' => array(
+                     'pageSize' => 4,
+                 ),
+            )
+        );
 
         $this->render(
             'roles',
             array(
+                 'modulePath'   => $this->modulePath,
                  'rolesDP' => $rolesDP,
             )
         );
@@ -109,11 +130,18 @@ class AdminController extends CController
 
     public function actionPermissions()
     {
-        $permissionsDP = new SimpleRbacPermissionsDataP();
+        $permissionsDP = new SimpleRbacPermissionsDataP(
+            array(
+                 'pagination' => array(
+                     'pageSize' => 4,
+                 ),
+            )
+        );
 
         $this->render(
             'permissions',
             array(
+                 'modulePath'   => $this->modulePath,
                  'permissionsDP' => $permissionsDP,
             )
         );
@@ -182,17 +210,66 @@ class AdminController extends CController
 
     public function actionNewRole()
     {
+        $model = new SimpleRbacNewRoleForm();
+
+        if (isset($_POST['SimpleRbacNewRoleForm'])) {
+            $model->attributes = $_POST['SimpleRbacNewRoleForm'];
+
+            if ($model->validate()) {
+                SRUser::createRole($model->roleName, $model->description);
+                $this->redirect(array('admin/roles',));
+            }
+        }
+
         $this->render(
             'newRole',
-            array()
+            array(
+                 'model' => $model,
+            )
         );
     }
 
     public function actionNewPermission()
     {
+        $model = new SimpleRbacNewPermissionForm();
+
+        if (isset($_POST['SimpleRbacNewPermissionForm'])) {
+            $model->attributes = $_POST['SimpleRbacNewPermissionForm'];
+
+            if ($model->validate()) {
+                SRUser::createPermission($model->permissionName, $model->description);
+                $this->redirect(array('admin/permissions',));
+            }
+        }
+
         $this->render(
             'newPermission',
-            array()
+            array(
+                 'model' => $model,
+            )
         );
+    }
+
+    public function actionDelete()
+    {
+        if (isset($_GET['ajax'])) {
+            if ((isset($_GET['type'])) && (isset($_GET['name']))) {
+                switch ($_GET['type']) {
+                    case 'user':
+                        SRUser::deleteUser($_GET['name']);
+                        break;
+                    case 'role':
+                        SRUser::deleteRole($_GET['name']);
+                        break;
+                    case 'permission':
+                        SRUser::deletePermission($_GET['name']);
+                        break;
+                }
+            }
+
+            Yii::app()->end();
+        } else {
+            throw new CHttpException(403, 'You can\'t access this page directly.');
+        }
     }
 }

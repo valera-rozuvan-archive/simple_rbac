@@ -5,11 +5,11 @@
 
 Version:
 
-    0.8
+    0.9
 
 Date:
 
-    Sun Sep  9 10:32:50 EEST 2012
+    Mon Sep 10 06:38:11 EEST 2012
 
 Authors:
 
@@ -169,9 +169,9 @@ this module's 'SimpleRbacLoginForm' model. It should look something similar to t
 
 
 
-==----------------==
-|| D - Uninstall ||
-==----------------==
+==---------------==
+|| C - Uninstall ||
+==---------------==
 
 To uninstall (i.e. remove all created tables and their data), go to:
 
@@ -188,9 +188,26 @@ and undo all the changes that you have made to the 'protected/config/main.php' f
 
 
 
+==-----------==
+|| D - Usage ||
+==-----------==
+
+
+
 ==----------------==
 || E - Change log ||
 ==----------------==
+
+[10.09.2012]
++ Replaced the Delete icon with a red cross instead of a minus sign.
++ Added ability to create a new role, and a new permission.
++ Modified validation of role and permission creation so that it includes cross checking between role and permission
+names. This is important because in the system, roles and permissions are stored as the same object. This means that
+you can not have a role and a permission named with the same name (the name is a unique key).
++ Enabled pagination for roles, and permissions.
++ Added cross checking against existing permissions/roles in actual method for creating a new permission, and a new
+role.
++ Added ability to delete users, roles, and permissions.
 
 [09.09.2012]
 + added ability to create a new user

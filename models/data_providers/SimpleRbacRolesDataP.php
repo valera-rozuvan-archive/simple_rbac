@@ -14,12 +14,21 @@ class SimpleRbacRolesDataP extends CDataProvider
     private $_data;
     private $_data_keys;
 
-    public function __construct()
+    public function __construct(array $config = array())
     {
-        $this->refreshData();
+        $this->populateData();
+
+        $_config = array();
+
+        $_config['itemCount'] = count($this->_data);
+        $_config['pageVar'] = 'SimpleRbacRolesDataP_page';
+        if (isset($config['pagination']['pageSize']))
+            $_config['pageSize'] = $config['pagination']['pageSize'];
+
+        $this->setPagination($_config);
 
         $this->_data_keys = array(
-            'name', 'default', 'description', 'childRoles', 'permissions',
+            'name', 'description', 'childRoles', 'permissions',
         );
     }
 
@@ -29,9 +38,12 @@ class SimpleRbacRolesDataP extends CDataProvider
      */
     protected function fetchData()
     {
-        $this->refreshData();
+        $start = $this->pagination->pageSize * $this->pagination->currentPage;
+        $end = $start + $this->pagination->pageSize;
 
-        return $this->_data;
+        $dataOnPage = array_slice($this->_data, $start, $end);
+
+        return $dataOnPage;
     }
 
     /**
@@ -52,17 +64,13 @@ class SimpleRbacRolesDataP extends CDataProvider
         return count($this->_data);
     }
 
-    public function refreshData()
+    public function populateData()
     {
         $auth = Yii::app()->authManager;
 
         $this->_data = array();
 
         foreach ($auth->roles as $role) {
-            $default = '';
-            if (in_array($role->name, $auth->defaultRoles))
-                $default = 'y';
-
             $allPermissions = array_keys($auth->getAuthItems(0));
             $allRoles = array_keys($auth->getAuthItems(2));
 
@@ -80,7 +88,6 @@ class SimpleRbacRolesDataP extends CDataProvider
 
             $this->_data[] = array(
                 'name'        => $role->name,
-                'default'     => $default,
                 'description' => $role->description,
                 'childRoles'  => implode(', ', $childRoles),
                 'permissions' => implode(', ', $permissions),

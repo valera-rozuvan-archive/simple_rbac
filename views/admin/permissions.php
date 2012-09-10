@@ -23,6 +23,22 @@ $this->widget(
                      'colspan' => '2',
                  ),
              ),
+             array
+             (
+                 'class'    => 'CButtonColumn',
+                 'template' => '{delete}',
+                 'buttons' => array(
+                     'delete' => array
+                     (
+                         'imageUrl' => $modulePath.'/images/deleteIcon24.png',
+                         'url'      => 'Yii::app()->createUrl("admin/delete", array("type" => "permission", "name" => $data["name"],))',
+                     ),
+                 ),
+                 'headerHtmlOptions' => array(
+                     'style' => 'display: none;',
+                 ),
+             ),
+             /*
              array(
                  'type'  => 'raw',
                  'value' => '"<div class=\"gridActionIcon deletePermission\" value=\"" . $data["name"] . "\"></div>"',
@@ -30,6 +46,7 @@ $this->widget(
                      'style' => 'display: none;',
                  ),
              ),
+             */
              array(
                  'name' => 'Description',
                  'value' => '$data["description"]',
