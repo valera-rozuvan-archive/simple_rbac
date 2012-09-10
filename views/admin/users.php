@@ -32,7 +32,7 @@ $this->widget(
                     'delete' => array
                     (
                         'imageUrl' => $modulePath.'/images/deleteIcon24.png',
-                        'url'      => 'Yii::app()->createUrl("admin/delete", array("type" => "user", "name" => $data->username,))',
+                        'url'      => 'Yii::app()->createUrl("simple_rbac/admin/delete", array("type" => "user", "name" => $data->username,))',
                         'visible'  => '!in_array($data->username, array("admin",))',
                     ),
                 ),

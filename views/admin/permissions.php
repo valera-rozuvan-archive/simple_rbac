@@ -31,7 +31,7 @@ $this->widget(
                      'delete' => array
                      (
                          'imageUrl' => $modulePath.'/images/deleteIcon24.png',
-                         'url'      => 'Yii::app()->createUrl("admin/delete", array("type" => "permission", "name" => $data["name"],))',
+                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/delete", array("type" => "permission", "name" => $data["name"],))',
                      ),
                  ),
                  'headerHtmlOptions' => array(
