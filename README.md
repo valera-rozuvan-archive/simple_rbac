@@ -5,7 +5,7 @@
 
 Version:
 
-    0.9
+    1.0
 
 Date:
 
@@ -197,6 +197,19 @@ and undo all the changes that you have made to the 'protected/config/main.php' f
 ==----------------==
 || E - Change log ||
 ==----------------==
+
+[15.09.2012]
++ Added pages user roles, and user info.
++ Fixed bug in 'SimpleRbacUsersInfoDbTable' model - there was a typo in primary key name.
++ Fixed bug in DB table creation SQL queries - there was a typo in primary key name for table
+used by 'SimpleRbacUsersInfoDbTable' model.
++ Methods 'deleteRole', and 'deleteUser' in SRUser now disable deletion of 'admin' user, 'guest' role, and
+'authenticated' role.
++ Code clean up in views - removed old, commented-out code.
++ From the 'users' page you can now see related user information by clicking on his username. Also added a button that
+will later allow for viewing the roles assigned to a specified user, and their management (deletion, and creation).
++ Removed default assignment of 'authenticated' role to the admin user. Such assignment is not necessary because this
+role is automatically assigned if it's business rule returns a positive match.
 
 [10.09.2012]
 + Replaced the Delete icon with a red cross instead of a minus sign.

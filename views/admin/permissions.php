@@ -38,15 +38,6 @@ $this->widget(
                      'style' => 'display: none;',
                  ),
              ),
-             /*
-             array(
-                 'type'  => 'raw',
-                 'value' => '"<div class=\"gridActionIcon deletePermission\" value=\"" . $data["name"] . "\"></div>"',
-                 'headerHtmlOptions' => array(
-                     'style' => 'display: none;',
-                 ),
-             ),
-             */
              array(
                  'name' => 'Description',
                  'value' => '$data["description"]',

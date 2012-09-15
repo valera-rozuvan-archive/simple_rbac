@@ -61,6 +61,11 @@ class SRUser
 
     public static function deleteUser($username)
     {
+        if ($username === 'admin') {
+            // The admin user can't be deleted.
+            return;
+        }
+
         $user = SRUser::getUser($username);
 
         if ($user === null) {
@@ -99,6 +104,11 @@ class SRUser
 
     public static function deleteRole($role)
     {
+        if (in_array($role, array('guest', 'authenticated',))) {
+            // The 'guest', and 'authenticated' roles can't be deleted.
+            return;
+        }
+
         $auth = Yii::app()->authManager;
 
         if (in_array($role, $auth->defaultRoles)) {

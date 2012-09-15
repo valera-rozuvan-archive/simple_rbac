@@ -46,7 +46,7 @@ class AdminController extends CController
             array(
                 'allow',
                 'actions' => array(
-                    'users', 'roles', 'permissions',
+                    'users', 'roles', 'permissions', 'userInfo', 'userRoles',
                     'logout', 'test',
                     'newUser', 'newRole', 'newPermission',
                     'delete',
@@ -56,7 +56,7 @@ class AdminController extends CController
             array(
                 'deny',
                 'actions' => array(
-                    'users', 'roles', 'permissions',
+                    'users', 'roles', 'permissions', 'userInfo', 'userRoles',
                     'logout', 'test',
                     'newUser', 'newRole', 'newPermission',
                     'delete',
@@ -145,6 +145,56 @@ class AdminController extends CController
                  'permissionsDP' => $permissionsDP,
             )
         );
+    }
+
+    public function actionUserInfo()
+    {
+        if (isset($_GET['username'])) {
+            $userInfoDP = new SimpleRbacUserInfoDataP(
+                $_GET['username'],
+                array(
+                     'pagination' => array(
+                         'pageSize' => 4,
+                     ),
+                )
+            );
+
+            $this->render(
+                'userInfo',
+                array(
+                     'modulePath' => $this->modulePath,
+                     'userInfoDP' => $userInfoDP,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a user.');
+        }
+    }
+
+    public function actionUserRoles()
+    {
+        if (isset($_GET['username'])) {
+            /*
+            $userRolesDP = new SimpleRbacUserRolesDataP(
+                $_GET['username'],
+                array(
+                     'pagination' => array(
+                         'pageSize' => 4,
+                     ),
+                )
+            );
+            */
+
+            $this->render(
+                'userRoles',
+                array(
+                     'modulePath'  => $this->modulePath,
+                     // 'userRolesDP' => $userRolesDP,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a username.');
+        }
     }
 
     public function actionLogout()

@@ -39,15 +39,6 @@ $this->widget(
                     'style' => 'display: none;',
                 ),
             ),
-            /*
-            array(
-                'type'  => 'raw',
-                'value' => '(!in_array($data["name"], array("admin", "authenticated", "guest",))) ? "<div class=\"gridActionIcon deleteRole\" value=\"" . $data["name"] . "\"></div>" : ""',
-                'headerHtmlOptions' => array(
-                    'style' => 'display: none;',
-                ),
-            ),
-            */
             array(
                 'name'  => 'Description',
                 'value' => '$data["description"]',

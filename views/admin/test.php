@@ -10,7 +10,9 @@
  */
 ?>
 
+<?/*
 Test.<br />
+*/?>
 
 <?
 
@@ -64,7 +66,6 @@ $command->getPdoStatement()->closeCursor();
 
 ?>
 
-
 <?
 /*
 $username = 'admin';
@@ -90,9 +91,11 @@ echo CHtml::button('Delete', array('submit' => array('admin/delete', 'type' => '
 */
 ?>
 
+<?/*
 <br />
 asa
 <br />
+*/?>
 
 <?
 /*
@@ -129,7 +132,9 @@ print_r($roleInfo);
 */
 ?>
 
+<?/*
 <br /><br />
+*/?>
 
 <?
 /*
@@ -138,8 +143,11 @@ print_r(array_keys($permissions));
 */
 ?>
 
+<?/*
 <br /><br />
+*/?>
 
+<? /*
 User has 'anotherPermission4' permission: <?=(SRUser::checkAccess('anotherPermission4')) ? 'true' : 'false'?><br />
 User has 'coolPermission' permission: <?=(SRUser::checkAccess('coolPermission')) ? 'true' : 'false'?><br />
 
@@ -173,3 +181,36 @@ Is authenticated: <?=(Yii::app()->authManager->checkAccess('authenticated', Yii:
 <br />
 Is admin: <?=(Yii::app()->authManager->checkAccess('admin', Yii::app()->user->getId())) ? 'true' : 'false'?><br />
 <br />
+
+*/ ?>
+
+<?
+
+$user = SRUser::getUser('admin');
+
+if (!isset($user->userInfo->user_id)) {
+    echo 'userInfo relations is undefined; creating a new one...<br />';
+
+    $userInfo = new SimpleRbacUsersInfoDbTable();
+    $userInfo->user_id = $user->id;
+    $userInfo->first_name = 'Valera';
+    $userInfo->save();
+
+    $user = SRUser::getUser('admin');
+} else {
+    echo 'userInfo relation is defined; retrieving stored data...<br />';
+}
+
+echo 'User id: '.$user->userInfo->user_id.'<br />';
+echo 'First name: '.$user->userInfo->first_name.'<br />';
+
+$user->userInfo->last_name = 'Rozuvan';
+$user->userInfo->save();
+$user->save();
+
+?>
+
+<br />
+<? print_r(array_keys($user->getAttributes())) ?>
+<br />
+<? print_r(array_keys(SimpleRbacUsersInfoDbTable::model()->getAttributes())) ?>

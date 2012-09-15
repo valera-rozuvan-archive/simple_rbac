@@ -24,7 +24,7 @@ class SimpleRbacUsersInfoDbTable extends CActiveRecord
 
     public function primaryKey()
     {
-        return 'users_id';
+        return 'user_id';
     }
 
     public function rules()
@@ -34,12 +34,12 @@ class SimpleRbacUsersInfoDbTable extends CActiveRecord
         // no other rules are defined by this method.
         return array(
             array(
-                'users_id',
+                'user_id',
                 'numerical',
                 'integerOnly' => true,
             ),
             array(
-                'users_id',
+                'user_id',
                 'required',
             ),
         );

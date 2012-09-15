@@ -20,6 +20,8 @@ $this->widget(
             'id',
             array(
                 'name'  => 'username',
+                'type'  => 'html',
+                'value' => 'CHtml::link($data->username, array("admin/userInfo", "username" => $data->username,))',
                 'headerHtmlOptions' => array(
                     'colspan' => '2',
                 ),
@@ -38,6 +40,19 @@ $this->widget(
                 ),
                 'headerHtmlOptions' => array(
                     'style' => 'display: none;',
+                ),
+            ),
+            array
+            (
+                'class'    => 'CButtonColumn',
+                'template' => '{roles}',
+                'header'   => 'Roles',
+                'buttons' => array(
+                    'roles' => array
+                    (
+                        'imageUrl' => $modulePath.'/images/editIcon24.png',
+                        'url'      => 'Yii::app()->createUrl("simple_rbac/admin/userRoles", array("username" => $data->username,))',
+                    ),
                 ),
             ),
             array(

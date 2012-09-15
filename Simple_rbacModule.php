@@ -13,7 +13,7 @@
 class Simple_rbacModule extends CWebModule
 {
     public $setup = 0;
-    public $simple_rbacVersion = '0.9';
+    public $simple_rbacVersion = '1.0';
 
     public function install()
     {
@@ -36,12 +36,12 @@ class Simple_rbacModule extends CWebModule
 
                 CREATE TABLE ".SimpleRbacUsersInfoDbTable::tableName()."
                 (
-                   `users_id`   INT (4) NOT NULL,
+                   `user_id`   INT (4) NOT NULL,
                    `first_name` VARCHAR (20) NOT NULL,
                    `last_name`  VARCHAR (20) NOT NULL,
                    `email`      VARCHAR (30) NOT NULL,
-                   PRIMARY KEY (`users_id`),
-                   CONSTRAINT `fk_users_id` FOREIGN KEY (`users_id`) REFERENCES ".SimpleRbacUsersDbTable::tableName()." (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                   PRIMARY KEY (`user_id`),
+                   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES ".SimpleRbacUsersDbTable::tableName()." (`id`) ON DELETE CASCADE ON UPDATE CASCADE
                 )
                 ENGINE = InnoDB
                 DEFAULT CHARSET = utf8
@@ -176,6 +176,16 @@ class Simple_rbacModule extends CWebModule
         );
     }
 
+    /*
+     * Create default roles which will be assigned automatically to the current user based on a defined
+     * business rule. These roles can't be deleted.
+     *
+     * 'guest' role will be assigned to a visitor - a user of the site who is not logged in.
+     * 'authenticated' role will be assigned to any logged in user.
+     *
+     * NOTE: You don't need to explicitly assign these two roles to a user, as they are assigned automatically if
+     * a user passes the business rule defined within them.
+     */
     private function createDefaultRoles()
     {
         $auth = Yii::app()->authManager;
@@ -189,10 +199,13 @@ class Simple_rbacModule extends CWebModule
         $auth->save();
     }
 
+    /*
+     * Create the default system administrator user. This user can't be deleted, and he will
+     * be assigned all newly created roles.
+     */
     private function createAdminUser()
     {
         SRUser::createRole('admin', 'Top administrative role.');
-        SRUser::assignChildRole('admin', 'authenticated');
         SRUser::createUser('admin', '1234', array('admin',));
     }
 }
