@@ -16,7 +16,7 @@ class SimpleRbacUserIdentity extends CUserIdentity
         } else if (!$userRecord->usernameActive()) {
             $this->errorCode = self::ERROR_USERNAME_INACTIVE;
         } else {
-            $this->_id = $userRecord->id;
+            $this->_id = intval($userRecord->id);
             $this->errorCode = self::ERROR_NONE;
 
             $userRecord->updateLastAccessed();

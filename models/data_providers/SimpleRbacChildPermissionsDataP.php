@@ -1,34 +1,35 @@
 <?php
 /*
  * Author    Valera Rozuvan
- * Created:  Sat Sep  8 09:57:58 EEST 2012
+ * Created:  Sun Sep 23 23:25:53 EEST 2012
  * 
- * File:      SimpleRbacRolesDataP.php
- * Full path: protected/modules/simple_rbac/models/data_providers/SimpleRbacRolesDataP.php
+ * File:      SimpleRbacChildPermissionsDataP.php
+ * Full path: protected/modules/simple_rbac/models/data_providers/SimpleRbacChildPermissionsDataP.php
  *
- * Description: Will provide roles and their information. Will be used for grid display.
+ * Description: Will provide child permissions of a parent role, and their information. Will be used for grid display.
  */
 
-class SimpleRbacRolesDataP extends CDataProvider
+class SimpleRbacChildPermissionsDataP extends CDataProvider
 {
+
     private $_data;
     private $_data_keys;
 
-    public function __construct(array $config = array())
+    public function __construct($roleName, array $config = array())
     {
-        $this->populateData();
+        $this->populateData($roleName);
 
         $_config = array();
 
         $_config['itemCount'] = count($this->_data);
-        $_config['pageVar'] = 'SimpleRbacRolesDataP_page';
+        $_config['pageVar'] = 'SimpleRbacChildPermissionsDataP';
         if (isset($config['pagination']['pageSize']))
             $_config['pageSize'] = $config['pagination']['pageSize'];
 
         $this->setPagination($_config);
 
         $this->_data_keys = array(
-            'name', 'description', 'childRoles', 'permissions',
+            'name', 'description',
         );
     }
 
@@ -64,34 +65,22 @@ class SimpleRbacRolesDataP extends CDataProvider
         return count($this->_data);
     }
 
-    public function populateData()
+    public function populateData($roleName)
     {
         $auth = Yii::app()->authManager;
 
         $this->_data = array();
 
-        foreach ($auth->roles as $role) {
-            $allPermissions = array_keys($auth->getAuthItems(0));
-            $allRoles = array_keys($auth->getAuthItems(2));
+        $childPermissions = SRUser::getChildPermissions($roleName);
 
-            $children = array_keys($role->children);
-            $childRoles = array();
-            $childPermissions = array();
-
-            foreach ($children as $child) {
-                if (in_array($child, $allPermissions)) {
-                    $childPermissions[] = $child;
-                } else if (in_array($child, $allRoles)) {
-                    $childRoles[] = $child;
-                }
-            }
+        foreach ($childPermissions as $childPermission) {
+            $authItem = $auth->getAuthItem($childPermission);
 
             $this->_data[] = array(
-                'name'        => $role->name,
-                'description' => $role->description,
-                'childRoles'  => implode(', ', $childRoles),
-                'permissions' => implode(', ', $childPermissions),
+                'name'        => $childPermission,
+                'description' => $authItem->description,
             );
         }
+
     }
 }

@@ -169,7 +169,7 @@ Is admin: <?=(Yii::app()->authManager->checkAccess('admin', Yii::app()->user->ge
 
 */?>
 
-<?
+<?/*
 $user = SRUser::getUser('admin');
 
 if (!isset($user->userInfo->user_id)) {
@@ -194,7 +194,7 @@ $user->userInfo->save();
 $user = SRUser::getUser('admin');
 
 echo 'Last name: '.$user->userInfo->last_name.'<br />';
-?>
+*/?>
 
 <?/*
 <br />
@@ -336,3 +336,17 @@ for ($i = 0; $i <= 19; $i++) {
 
 ?>
 </pre>*/?>
+
+<?
+
+$user = SRUser::getUser('admin');
+
+$auth = $auth = Yii::app()->authManager;
+
+print_r(array_keys($auth->getAuthAssignments($user->id)));
+
+echo '<br />';
+
+echo 'User ID: '.Yii::app()->user->id;
+
+?>

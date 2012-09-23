@@ -5,7 +5,7 @@
 
 Version:
 
-    1.1
+    1.2
 
 Date:
 
@@ -444,6 +444,15 @@ if the additional information does not exist, you must first create it.
 ==----------------==
 || E - Change log ||
 ==----------------==
+
+[23.09.2012]
++ Can see a list of roles assigned to a user.
++ Implemented assigning of roles to a user.
++ Can revoke a role from a user.
++ Editing values of attributes in user info.
++ Status chaning for a user account (active, inactive).
++ The admin can change any user password (old password is not required).
++ Implemented child role, and child permission management for a parent role.
 
 [22.09.2012]
 + Added documentation to the README.md file.

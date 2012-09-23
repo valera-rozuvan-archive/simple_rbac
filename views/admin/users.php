@@ -16,7 +16,7 @@ $this->widget(
     'zii.widgets.grid.CGridView',
     array(
         'dataProvider' => $dataProvider,
-        'columns' => array(
+        'columns'      => array(
             'id',
             array(
                 'name'  => 'username',
@@ -26,42 +26,42 @@ $this->widget(
                     'colspan' => '2',
                 ),
             ),
-            array
-            (
+            array(
                 'class'    => 'CButtonColumn',
                 'template' => '{delete}',
-                'buttons' => array(
-                    'delete' => array
-                    (
+                'buttons'  => array(
+                    'delete' => array(
                         'imageUrl' => $modulePath.'/images/deleteIcon24.png',
                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/delete", array("type" => "user", "name" => $data->username,))',
-                        'visible'  => '!in_array($data->username, array("admin",))',
+                        'visible'  => 'SRUser::getUserId($data->username) !== 1',
                     ),
                 ),
                 'headerHtmlOptions' => array(
                     'style' => 'display: none;',
                 ),
             ),
-            array
-            (
+            array(
                 'class'    => 'CButtonColumn',
                 'template' => '{roles}',
                 'header'   => 'Roles',
-                'buttons' => array(
-                    'roles' => array
-                    (
+                'buttons'  => array(
+                    'roles' => array(
                         'imageUrl' => $modulePath.'/images/editIcon24.png',
                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/userRoles", array("username" => $data->username,))',
                     ),
                 ),
             ),
             array(
-                'name' => 'status',
-                'type' => 'html',
-                'value' => '(intval($data->status) === 1) ? "<span class=\"status active\">active</span>" : "<span class=\"status inactive\">inactive</span>"',
+                'class'              => 'CLinkColumn',
+                'labelExpression'    => '(SRUser::getUserId($data->username) === 1) ? "" : ((intval($data->status) === 1) ? "active" : "inactive")',
+                'urlExpression'      => '(intval($data->status) === 1) ?
+                                             Yii::app()->createUrl("simple_rbac/admin/switchUserStatus", array("username" => $data->username, "status" => 0,)) :
+                                             Yii::app()->createUrl("simple_rbac/admin/switchUserStatus", array("username" => $data->username, "status" => 1,))',
+                'header'             => 'Status',
+                'cssClassExpression' => '(intval($data->status) === 1) ? "status active" : "status inactive"',
             ),
             array(
-                'name' => 'last_access',
+                'name'  => 'last_access',
                 'value' => '(preg_match("/^1970-01-01/", $data->last_access)) ? "never" : $data->last_access',
             ),
             'registered',

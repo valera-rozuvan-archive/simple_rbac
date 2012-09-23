@@ -10,6 +10,8 @@
  */
 ?>
 
+<h3 class="h3NoMargin">Create a new role</h3>
+
 <?=CHtml::beginForm()?>
 <?=CHtml::errorSummary($model)?>
 <?=CHtml::activeLabel($model, 'roleName')?><br />

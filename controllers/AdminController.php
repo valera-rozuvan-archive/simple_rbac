@@ -153,6 +153,7 @@ class AdminController extends CController
                 'userInfo',
                 array(
                      'modulePath' => $this->modulePath,
+                     'username'   => $_GET['username'],
                      'userInfoDP' => $userInfoDP,
                 )
             );
@@ -161,10 +162,40 @@ class AdminController extends CController
         }
     }
 
+    public function actionChangeUserInfoAttributeValue()
+    {
+        if ((isset($_GET['username'])) && (isset($_GET['attribute']))) {
+            $model = new SimpleRbacChangeUserInfoAttributeValueForm();
+
+            if (isset($_POST['SimpleRbacChangeUserInfoAttributeValueForm'])) {
+                $model->attributes = $_POST['SimpleRbacChangeUserInfoAttributeValueForm'];
+
+                // We must validate username before we validate the role. This is because if username is invaid, then
+                // role validation will raise an error (we check if the role is already assigned to the specified
+                // username).
+                if ($model->validate()) {
+                    SRUser::changeUserInfoAttributeValue($model->username, $model->attribute, $model->value);
+                    $this->redirect(array('admin/userInfo', 'username' => $model->username,));
+                }
+            }
+
+            $this->render(
+                'changeUserInfoAttributeValue',
+                array(
+                     'username'  => $_GET['username'],
+                     'attribute' => $_GET['attribute'],
+                     'oldValue'  => SRUser::getUserInfoAttributeValue($_GET['username'], $_GET['attribute']),
+                     'model'     => $model,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a user and/or attribute.');
+        }
+    }
+
     public function actionUserRoles()
     {
         if (isset($_GET['username'])) {
-            /*
             $userRolesDP = new SimpleRbacUserRolesDataP(
                 $_GET['username'],
                 array(
@@ -173,17 +204,193 @@ class AdminController extends CController
                      ),
                 )
             );
-            */
 
             $this->render(
                 'userRoles',
                 array(
                      'modulePath'  => $this->modulePath,
-                     // 'userRolesDP' => $userRolesDP,
+                     'username'    => $_GET['username'],
+                     'userRolesDP' => $userRolesDP,
                 )
             );
         } else {
             throw new CHttpException(403, 'You did not specify a username.');
+        }
+    }
+
+    public function actionChildRoles()
+    {
+        if (isset($_GET['roleName'])) {
+            $childRolesDP = new SimpleRbacChildRolesDataP(
+                $_GET['roleName'],
+                array(
+                     'pagination' => array(
+                         'pageSize' => 4,
+                     ),
+                )
+            );
+
+            $this->render(
+                'childRoles',
+                array(
+                     'modulePath'  => $this->modulePath,
+                     'roleName'    => $_GET['roleName'],
+                     'childRolesDP' => $childRolesDP,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a role.');
+        }
+    }
+
+    public function actionAssignChildRole()
+    {
+        if (isset($_GET['parentRole'])) {
+            $model = new SimpleRbacAssignChildRoleForm();
+
+            if (isset($_POST['SimpleRbacAssignChildRoleForm'])) {
+                $model->attributes = $_POST['SimpleRbacAssignChildRoleForm'];
+
+                // We must validate the parent role before we validate the child role. This is because if parent role
+                // is invalid, validation will raise an error (we check if child role is already assigned to parent
+                // role).
+                if (($model->validate(array('parentRole'))) && ($model->validate(array('childRole')))) {
+                    SRUser::assignChildRole($model->parentRole, $model->childRole);
+                    $this->redirect(array('admin/childRoles', 'roleName' => $model->parentRole,));
+                }
+            }
+
+            $this->render(
+                'assignChildRole',
+                array(
+                     'parentRole' => $_GET['parentRole'],
+                     'model'      => $model,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a parent role.');
+        }
+    }
+
+    public function actionRemoveChildRole()
+    {
+        if (isset($_GET['ajax'])) {
+            if ((isset($_GET['parentRole'])) && (isset($_GET['childRole']))) {
+                SRUser::removeChildRole($_GET['parentRole'], $_GET['childRole']);
+            }
+
+            Yii::app()->end();
+        } else {
+            throw new CHttpException(403, 'You can\'t access this page directly.');
+        }
+    }
+
+    public function actionChildPermissions()
+    {
+        if (isset($_GET['roleName'])) {
+            $childPermissionsDP = new SimpleRbacChildPermissionsDataP(
+                $_GET['roleName'],
+                array(
+                     'pagination' => array(
+                         'pageSize' => 4,
+                     ),
+                )
+            );
+
+            $this->render(
+                'childPermissions',
+                array(
+                     'modulePath' => $this->modulePath,
+                     'roleName'   => $_GET['roleName'],
+                     'childPermissionsDP' => $childPermissionsDP,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a role.');
+        }
+    }
+
+    public function actionAssignChildPermission()
+    {
+        if (isset($_GET['parentRole'])) {
+            $model = new SimpleRbacAssignChildPermissionForm();
+
+            if (isset($_POST['SimpleRbacAssignChildPermissionForm'])) {
+                $model->attributes = $_POST['SimpleRbacAssignChildPermissionForm'];
+
+                // We must validate the parent role before we validate the child permission. This is because if parent
+                // role is invalid, validation will raise an error (we check if child permission is already assigned
+                // to parent role).
+                if (($model->validate(array('parentRole'))) && ($model->validate(array('childPermission')))) {
+                    SRUser::assignPermission($model->parentRole, $model->childPermission);
+                    $this->redirect(array('admin/childPermissions', 'roleName' => $model->parentRole,));
+                }
+            }
+
+            $this->render(
+                'assignChildPermission',
+                array(
+                     'parentRole' => $_GET['parentRole'],
+                     'model'      => $model,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a parent role.');
+        }
+    }
+
+    public function actionRemoveChildPermission()
+    {
+        if (isset($_GET['ajax'])) {
+            if ((isset($_GET['parentRole'])) && (isset($_GET['childPermission']))) {
+                SRUser::removeChildPermission($_GET['parentRole'], $_GET['childPermission']);
+            }
+
+            Yii::app()->end();
+        } else {
+            throw new CHttpException(403, 'You can\'t access this page directly.');
+        }
+    }
+
+    public function actionAssignRoleToUser()
+    {
+        if (isset($_GET['username'])) {
+            $model = new SimpleRbacAssignRoleToUserForm();
+
+            if (isset($_POST['SimpleRbacAssignRoleToUserForm'])) {
+                $model->attributes = $_POST['SimpleRbacAssignRoleToUserForm'];
+
+                // We must validate username before we validate the role. This is because if username is invaid, then
+                // role validation will raise an error (we check if the role is already assigned to the specified
+                // username).
+                if (($model->validate(array('username'))) && ($model->validate(array('role')))) {
+                    SRUser::assignRoleToUser($model->username, $model->role);
+                    $this->redirect(array('admin/userRoles', 'username' => $model->username,));
+                }
+            }
+
+            $this->render(
+                'assignRoleToUser',
+                array(
+                     'username' => $_GET['username'],
+                     'model'    => $model,
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a username.');
+        }
+    }
+
+    public function actionRevokeRoleFromUser()
+    {
+        if (isset($_GET['ajax'])) {
+            if ((isset($_GET['username'])) && (isset($_GET['role']))) {
+                SRUser::revokeRoleFromUser($_GET['username'], $_GET['role']);
+            }
+
+            Yii::app()->end();
+        } else {
+            throw new CHttpException(403, 'You can\'t access this page directly.');
         }
     }
 
@@ -310,6 +517,47 @@ class AdminController extends CController
             Yii::app()->end();
         } else {
             throw new CHttpException(403, 'You can\'t access this page directly.');
+        }
+    }
+
+    public function actionSwitchUserStatus()
+    {
+        if ((isset($_GET['username'])) && (isset($_GET['status']))) {
+            SRUser::switchUserStatus($_GET['username'], $_GET['status']);
+
+            $this->redirect(array('admin/users',));
+        } else {
+            throw new CHttpException(403, 'Username and/opr status was not specified.');
+        }
+    }
+
+    public function actionChangePassword()
+    {
+        if (isset($_GET['username'])) {
+            $model = new SimpleRbacChangePasswordForm();
+
+            if (isset($_POST['SimpleRbacChangePasswordForm'])) {
+                $model->attributes = $_POST['SimpleRbacChangePasswordForm'];
+
+                if (
+                    ($model->validate(array('username'))) &&
+                    ($model->validate(array('newPassword1'))) &&
+                    ($model->validate(array('newPassword2')))
+                ) {
+                    SRUser::changePassword($model->username, $model->newPassword1);
+                    $this->redirect(array('admin/userInfo', 'username' => $model->username,));
+                }
+            }
+
+            $this->render(
+                'changePassword',
+                array(
+                     'model' => $model,
+                     'username' => $_GET['username'],
+                )
+            );
+        } else {
+            throw new CHttpException(403, 'You did not specify a username.');
         }
     }
 }

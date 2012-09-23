@@ -10,6 +10,8 @@
  */
 ?>
 
+<h3 class="h3NoMargin">User information for <span style="font-style: italic; text-decoration: underline;"><?=$username?></span></h3>
+
 <?
 $this->widget(
     'zii.widgets.grid.CGridView',
@@ -23,8 +25,29 @@ $this->widget(
              array(
                  'name' => 'Value',
                  'value' => '$data["value"]',
+                 'headerHtmlOptions' => array(
+                     'colspan' => '2',
+                 ),
+             ),
+             array
+             (
+                 'class'    => 'CButtonColumn',
+                 'template' => '{edit}',
+                 'buttons' => array(
+                     'edit' => array
+                     (
+                         'imageUrl' => $modulePath.'/images/editIcon24.png',
+                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/changeUserInfoAttributeValue", array("username" => "'.$username.'", "attribute" => $data["attribute"],))',
+                         'visible'  => '$data["attribute"] !== "user_id"',
+                     ),
+                 ),
+                 'headerHtmlOptions' => array(
+                     'style' => 'display: none;',
+                 ),
              ),
          ),
     )
 );
 ?>
+
+<?=CHTML::link('Change password', array('admin/changePassword', 'username' => $username,))?>

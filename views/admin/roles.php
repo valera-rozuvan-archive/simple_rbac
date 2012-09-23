@@ -15,21 +15,19 @@ $this->widget(
     'zii.widgets.grid.CGridView',
     array(
         'dataProvider' => $rolesDP,
-        'columns' => array(
+        'columns'      => array(
             array(
-                'name' => 'Role',
+                'name'  => 'Role',
                 'value' => '$data["name"]',
                 'headerHtmlOptions' => array(
                     'colspan' => '2',
                 ),
             ),
-            array
-            (
+            array(
                 'class'    => 'CButtonColumn',
                 'template' => '{delete}',
-                'buttons' => array(
-                    'delete' => array
-                    (
+                'buttons'  => array(
+                    'delete' => array(
                         'imageUrl' => $modulePath.'/images/deleteIcon24.png',
                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/delete", array("type" => "role", "name" => $data["name"],))',
                         'visible'  => '!in_array($data["name"], array("admin", "authenticated", "guest",))',
@@ -44,31 +42,25 @@ $this->widget(
                 'value' => '$data["description"]',
             ),
             array(
-                'name' => 'Child roles',
-                'value' => '$data["childRoles"]',
-                'headerHtmlOptions' => array(
-                    'colspan' => '2',
+                'class'    => 'CButtonColumn',
+                'template' => '{childRoles}',
+                'header'   => 'Child roles',
+                'buttons'  => array(
+                    'childRoles' => array(
+                        'imageUrl' => $modulePath.'/images/editIcon24.png',
+                        'url'      => 'Yii::app()->createUrl("simple_rbac/admin/childRoles", array("roleName" => $data["name"],))',
+                    ),
                 ),
             ),
             array(
-                'type'  => 'raw',
-                'value' => '"<div class=\"gridActionIcon addChildRole\" value=\"" . $data["name"] . "\"></div>"',
-                'headerHtmlOptions' => array(
-                    'style' => 'display: none;',
-                ),
-            ),
-            array(
-                'name' => 'Permissions',
-                'value' => '$data["permissions"]',
-                'headerHtmlOptions' => array(
-                    'colspan' => '2',
-                ),
-            ),
-            array(
-                'type'  => 'raw',
-                'value' => '"<div class=\"gridActionIcon addChildPermission\" value=\"" . $data["name"] . "\"></div>"',
-                'headerHtmlOptions' => array(
-                    'style' => 'display: none;',
+                'class'    => 'CButtonColumn',
+                'template' => '{childPermissions}',
+                'header'   => 'Child permissions',
+                'buttons'  => array(
+                    'childPermissions' => array(
+                        'imageUrl' => $modulePath.'/images/editIcon24.png',
+                        'url'      => 'Yii::app()->createUrl("simple_rbac/admin/childPermissions", array("roleName" => $data["name"],))',
+                    ),
                 ),
             ),
         ),

@@ -223,12 +223,17 @@
     background: url('../images/editAddIcon64.png') no-repeat;
 }
 
-.status.active
+.status.active a
 {
     color: green;
 }
 
-.status.inactive
+.status.inactive a
 {
     color: red;
+}
+
+.h3NoMargin
+{
+    margin: 0px;
 }

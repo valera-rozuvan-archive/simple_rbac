@@ -1,25 +1,25 @@
 <?php
 /*
  * Author    Valera Rozuvan
- * Created:  Sat Sep 15 19:59:45 EEST 2012
+ * Created:  Sun Sep 23 23:28:10 EEST 2012
  * 
- * File:      userRoles.php
- * Full path: protected/modules/simple_rbac/views/admin/userRoles.php
+ * File:      childPermissions.php
+ * Full path: protected/modules/simple_rbac/views/admin/childPermissions.php
  *
- * Description: A view to display all the roles that are assigned to the specified user.
+ * Description: A view to display all child permissions assigned to a parent role.
  */
 ?>
 
-<h3 class="h3NoMargin">Roles assigned to user <span style="font-style: italic; text-decoration: underline;"><?=$username?></span></h3>
+<h3 class="h3NoMargin">Child permissions of <span style="font-style: italic; text-decoration: underline;"><?=$roleName?></span> role</h3>
 
 <?
 $this->widget(
     'zii.widgets.grid.CGridView',
     array(
-         'dataProvider' => $userRolesDP,
+         'dataProvider' => $childPermissionsDP,
          'columns' => array(
              array(
-                 'name' => 'Role',
+                 'name' => 'Name',
                  'value' => '$data["name"]',
                  'headerHtmlOptions' => array(
                      'colspan' => '2',
@@ -33,8 +33,7 @@ $this->widget(
                      'delete' => array
                      (
                          'imageUrl' => $modulePath.'/images/deleteIcon24.png',
-                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/revokeRoleFromUser", array("username" => "'.$username.'", "role" => $data["name"],))',
-                         'visible'  => '!(($data["name"] === "admin") && (Yii::app()->user->id) === 1)',
+                         'url'      => 'Yii::app()->createUrl("simple_rbac/admin/removeChildPermission", array("parentRole" => "'.$roleName.'", "childPermission" => $data["name"],))',
                      ),
                  ),
                  'headerHtmlOptions' => array(
@@ -42,7 +41,7 @@ $this->widget(
                  ),
              ),
              array(
-                 'name'  => 'Description',
+                 'name' => 'Description',
                  'value' => '$data["description"]',
              ),
          ),
@@ -52,4 +51,4 @@ $this->widget(
 
 <br />
 
-<?=CHtml::button('', array('submit' => array('admin/assignRoleToUser', 'username' => $username), 'csrf' => true, 'class' => 'createNewAction role'))?>
+<?=CHtml::button('', array('submit' => array('admin/assignChildPermission', 'parentRole' => $roleName,), 'csrf' => true, 'class' => 'createNewAction permission'))?>

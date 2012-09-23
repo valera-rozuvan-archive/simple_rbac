@@ -1,16 +1,15 @@
 <?php
 /*
  * Author    Valera Rozuvan
- * Created:  Sat Sep 15 19:04:54 EEST 2012
- * 
- * File:      SimpleRbacUserInfoDataP.php
- * Full path: protected/modules/simple_rbac/models/data_providers/SimpleRbacUserInfoDataP.php
+ * Created:  Sun Sep 23 15:28:42 EEST 2012
  *
- * Description: Will provide the related user information in two columns to be used for grid display. The first column
- * will contain attribute names, the second column will contain the values stored for each attribute.
+ * File:      SimpleRbacUserRolesDataP.php
+ * Full path: protected/modules/simple_rbac/models/data_providers/SimpleRbacUserRolesDataP.php
+ *
+ * Description: Will provide roles that are directly assigned to a user. Will be used for grid display.
  */
 
-class SimpleRbacUserInfoDataP extends CDataProvider
+class SimpleRbacUserRolesDataP extends CDataProvider
 {
     private $_data;
     private $_data_keys;
@@ -22,14 +21,14 @@ class SimpleRbacUserInfoDataP extends CDataProvider
         $_config = array();
 
         $_config['itemCount'] = count($this->_data);
-        $_config['pageVar'] = 'SimpleRbacUserInfoDataP_page';
+        $_config['pageVar'] = 'SimpleRbacUserRolesDataP_page';
         if (isset($config['pagination']['pageSize']))
             $_config['pageSize'] = $config['pagination']['pageSize'];
 
         $this->setPagination($_config);
 
         $this->_data_keys = array(
-            'attribute', 'value',
+            'name', 'description',
         );
     }
 
@@ -73,12 +72,13 @@ class SimpleRbacUserInfoDataP extends CDataProvider
         if ($user === null)
             return;
 
-        $attributes = array_keys(SimpleRbacUsersInfoDbTable::model()->getAttributes());
+        $auth = Yii::app()->authManager;
+        $userRoles = array_keys($auth->getAuthAssignments($user->id));
 
-        foreach ($attributes as $attribute) {
+        foreach ($userRoles as $userRole) {
             $this->_data[] = array(
-                'attribute' => $attribute,
-                'value'     => (isset($user->userInfo->{$attribute})) ? $user->userInfo->{$attribute} : '',
+                'name' => $auth->roles[$userRole]->name,
+                'description' => $auth->roles[$userRole]->description,
             );
         }
     }
