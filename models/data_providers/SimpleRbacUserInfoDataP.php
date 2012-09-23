@@ -79,7 +79,7 @@ class SimpleRbacUserInfoDataP extends CDataProvider
         foreach ($attributes as $attribute) {
             $this->_data[] = array(
                 'attribute' => $attribute,
-                'value'     => $user->userInfo->{$attribute},
+                'value'     => (isset($user->userInfo->{$attribute})) ? $user->userInfo->{$attribute} : '',
             );
         }
     }

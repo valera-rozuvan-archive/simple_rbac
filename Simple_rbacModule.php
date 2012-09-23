@@ -13,13 +13,13 @@
 class Simple_rbacModule extends CWebModule
 {
     public $setup = 0;
-    public $simple_rbacVersion = '1.0';
+    public $simple_rbacVersion = '1.1';
 
     public function install()
     {
         if (($this->setupMode() === true) && ($this->installed() === false)) {
             $sql = "
-                CREATE TABLE ".SimpleRbacUsersDbTable::tableName()."
+                CREATE TABLE ".SimpleRbacUsersDbTable::tableName_s()."
                 (
                     `id`          INT (4) NOT NULL AUTO_INCREMENT,
                     `username`    VARCHAR (16) NOT NULL,
@@ -34,14 +34,14 @@ class Simple_rbacModule extends CWebModule
                 DEFAULT CHARSET = utf8
                 COLLATE utf8_general_ci;
 
-                CREATE TABLE ".SimpleRbacUsersInfoDbTable::tableName()."
+                CREATE TABLE ".SimpleRbacUsersInfoDbTable::tableName_s()."
                 (
                    `user_id`   INT (4) NOT NULL,
                    `first_name` VARCHAR (20) NOT NULL,
                    `last_name`  VARCHAR (20) NOT NULL,
                    `email`      VARCHAR (30) NOT NULL,
                    PRIMARY KEY (`user_id`),
-                   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES ".SimpleRbacUsersDbTable::tableName()." (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+                   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES ".SimpleRbacUsersDbTable::tableName_s()." (`id`) ON DELETE CASCADE ON UPDATE CASCADE
                 )
                 ENGINE = InnoDB
                 DEFAULT CHARSET = utf8
@@ -169,8 +169,8 @@ class Simple_rbacModule extends CWebModule
     {
         return array(
             '{{AuthItem}}',
-            SimpleRbacUsersInfoDbTable::tableName(),
-            SimpleRbacUsersDbTable::tableName(),
+            SimpleRbacUsersInfoDbTable::tableName_s(),
+            SimpleRbacUsersDbTable::tableName_s(),
             '{{AuthItemChild}}',
             '{{AuthAssignment}}',
         );

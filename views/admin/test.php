@@ -1,5 +1,4 @@
-<?php
-/*
+<?/*
  * Author    Valera Rozuvan
  * Created:  Sat Sep  8 10:15:41 EEST 2012
  * 
@@ -7,17 +6,14 @@
  * Full path: protected/modules/simple_rbac/views/admin/test.php
  *
  * Description: A view to use for testing.
- */
-?>
+ */?>
 
 <?/*
 Test.<br />
 */?>
 
 <?
-
 // SRUser::deleteRole('newRole');
-
 /*
 $auth = Yii::app()->authManager;
 $output = $auth->removeAuthItem('newRole');
@@ -63,11 +59,9 @@ $command = Yii::app()->db->createCommand()
 $command->execute();
 $command->getPdoStatement()->closeCursor();
 */
-
 ?>
 
-<?
-/*
+<?/*
 $username = 'admin';
 
 $user = SRUser::getUser($username);
@@ -82,14 +76,11 @@ if ($user === null) {
     foreach ($userRoles as $userRole)
         echo $userRole.', ';
 }
-*/
-?>
+*/?>
 
-<?
-/*
+<?/*
 echo CHtml::button('Delete', array('submit' => array('admin/delete', 'type' => 'user', 'name' => 'testUserName',), 'csrf' => true, 'class' => 'headerButton logOut'))
-*/
-?>
+*/?>
 
 <?/*
 <br />
@@ -97,14 +88,11 @@ asa
 <br />
 */?>
 
-<?
-/*
+<?/*
 SRUser::createUser('admin', 'zzz');
-*/
-?>
+*/?>
 
-<?
-/*
+<?/*
 SRUser::createPermission('anotherPermission4', 'Permission n 4.');
 SRUser::assignPermission('admin', 'anotherPermission4');
 
@@ -129,25 +117,22 @@ $roleInfo = array(
 );
 
 print_r($roleInfo);
-*/
-?>
+*/?>
 
 <?/*
 <br /><br />
 */?>
 
-<?
-/*
+<?/*
 $permissions = Yii::app()->authManager->getAuthItems(0);
 print_r(array_keys($permissions));
-*/
-?>
+*/?>
 
 <?/*
 <br /><br />
 */?>
 
-<? /*
+<?/*
 User has 'anotherPermission4' permission: <?=(SRUser::checkAccess('anotherPermission4')) ? 'true' : 'false'?><br />
 User has 'coolPermission' permission: <?=(SRUser::checkAccess('coolPermission')) ? 'true' : 'false'?><br />
 
@@ -182,10 +167,9 @@ Is authenticated: <?=(Yii::app()->authManager->checkAccess('authenticated', Yii:
 Is admin: <?=(Yii::app()->authManager->checkAccess('admin', Yii::app()->user->getId())) ? 'true' : 'false'?><br />
 <br />
 
-*/ ?>
+*/?>
 
 <?
-
 $user = SRUser::getUser('admin');
 
 if (!isset($user->userInfo->user_id)) {
@@ -193,7 +177,7 @@ if (!isset($user->userInfo->user_id)) {
 
     $userInfo = new SimpleRbacUsersInfoDbTable();
     $userInfo->user_id = $user->id;
-    $userInfo->first_name = 'Valera';
+    $userInfo->first_name = 'YourFirstName';
     $userInfo->save();
 
     $user = SRUser::getUser('admin');
@@ -204,13 +188,151 @@ if (!isset($user->userInfo->user_id)) {
 echo 'User id: '.$user->userInfo->user_id.'<br />';
 echo 'First name: '.$user->userInfo->first_name.'<br />';
 
-$user->userInfo->last_name = 'Rozuvan';
+$user->userInfo->last_name = 'YourLastName';
 $user->userInfo->save();
-$user->save();
 
+$user = SRUser::getUser('admin');
+
+echo 'Last name: '.$user->userInfo->last_name.'<br />';
 ?>
 
+<?/*
 <br />
 <? print_r(array_keys($user->getAttributes())) ?>
 <br />
 <? print_r(array_keys(SimpleRbacUsersInfoDbTable::model()->getAttributes())) ?>
+*/?>
+
+<?/*<pre>
+<?
+
+function test_p10()
+{
+
+}
+
+class test_p17
+{
+
+}
+
+class test_p18
+{
+    public function __destruct()
+    {
+
+    }
+}
+
+// is NOT set, is empty, does NOT evaluate to true, is null
+$x_p1;
+$x_p2 = null;
+$x_p3 = test_p10(); // for functions without a return() statement PHP returns null
+
+// is set, is empty, does NOT evaluate to true, is NOT null
+$x_p4 = '';
+$x_p5 = array();
+$x_p6 = false;
+$x_p7 = 0;
+$x_p8 = '0';
+$x_p9 = 0.0;
+
+// !!!! is set, is NOT empty, evaluates to true, is NOT null
+$x_p10 = '0.0';
+
+// is set, is NOT empty, evaluates to true, is NOT null
+$x_p11 = 1;
+$x_p12 = '1';
+$x_p13 = array(1,);
+$x_p14 = array(array(),);
+$x_p15 = true;
+$x_p16 = NAN;
+$x_p17 = new test_p17();
+$x_p18 = new test_p18();
+$x_p18->__destruct();
+$x_p19 = (object)null;
+
+for ($i = 0; $i <= 19; $i++) {
+    echo 'x_p'.$i.' ';
+    if (isset(${'x_p'.$i}))
+        echo 'is set, ';
+    else
+        echo 'is NOT set, ';
+
+    if (empty(${'x_p'.$i}))
+        echo 'is empty, ';
+    else
+        echo 'is NOT empty, ';
+
+    if (${'x_p'.$i})
+        echo 'evaluates to true, ';
+    else
+        echo 'does NOT evaluate to true, ';
+
+    if (is_null(${'x_p'.$i}))
+        echo 'is null';
+    else
+        echo 'is NOT null';
+    echo '<br />';
+}
+
+for ($i = 0; $i <= 19; $i++) {
+    unset(${'x_p'.$i});
+}
+echo '<br />';
+
+for ($i = 0; $i <= 19; $i++) {
+    echo 'x_p'.$i.' ';
+    if (isset(${'x_p'.$i}))
+        echo 'is set, ';
+    else
+        echo 'is NOT set, ';
+
+    if (empty(${'x_p'.$i}))
+        echo 'is empty, ';
+    else
+        echo 'is NOT empty, ';
+
+    if (${'x_p'.$i})
+        echo 'evaluates to true, ';
+    else
+        echo 'does NOT evaluate to true, ';
+
+    if (is_null(${'x_p'.$i}))
+        echo 'is null';
+    else
+        echo 'is NOT null';
+    echo '<br />';
+}
+
+for ($i = 0; $i <= 19; $i++) {
+    ${'x_p'.$i} = '1';
+}
+echo '<br />';
+
+for ($i = 0; $i <= 19; $i++) {
+    echo 'x_p'.$i.' ';
+    if (isset(${'x_p'.$i}))
+        echo 'is set, ';
+    else
+        echo 'is NOT set, ';
+
+    if (empty(${'x_p'.$i}))
+        echo 'is empty, ';
+    else
+        echo 'is NOT empty, ';
+
+    if (${'x_p'.$i})
+        echo 'evaluates to true, ';
+    else
+        echo 'does NOT evaluate to true, ';
+
+    if (is_null(${'x_p'.$i}))
+        echo 'is null';
+    else
+        echo 'is NOT null';
+    echo '<br />';
+}
+
+?>
+</pre>*/?>

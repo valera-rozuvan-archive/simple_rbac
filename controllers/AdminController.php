@@ -38,30 +38,20 @@ class AdminController extends CController
 
     public function accessRules()
     {
-        // is setup parameter is set, we don't process the access rules defined below; beforeAction() will handle it
+        // is setup parameter is set, we don't process the access rules defined below; beforeAction() will handle it;
+        // this is important because before this module is installed, there are no roles, users, or permissions;
         if (Yii::app()->controller->module->setupMode())
             return array();
 
         return array(
             array(
+                // If the user has the 'admin' roles assigned to him, allow all actions.
                 'allow',
-                'actions' => array(
-                    'users', 'roles', 'permissions', 'userInfo', 'userRoles',
-                    'logout', 'test',
-                    'newUser', 'newRole', 'newPermission',
-                    'delete',
-                ),
                 'roles'   => array('admin',),
             ),
             array(
+                // If none of the above rules match, deny all access to all actions.
                 'deny',
-                'actions' => array(
-                    'users', 'roles', 'permissions', 'userInfo', 'userRoles',
-                    'logout', 'test',
-                    'newUser', 'newRole', 'newPermission',
-                    'delete',
-                ),
-                'users'   => array('*',),
             ),
         );
     }

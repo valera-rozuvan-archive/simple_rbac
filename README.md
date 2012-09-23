@@ -5,11 +5,11 @@
 
 Version:
 
-    1.0
+    1.1
 
 Date:
 
-    Mon Sep 10 06:38:11 EEST 2012
+    Sun Sep 23 14:52:16 EEST 2012
 
 Authors:
 
@@ -22,6 +22,26 @@ Authors:
 || A - Description ||
 ==-----------------==
 
+This module is provided as an example of how one can use the available Yii CDbAuthManager class together with custom
+DB user tables. It does not fully realize Yii's idea of roles, tasks, and operations. Instead it develops a simplified
+authorization management model which includes only roles, and permissions. Permissions are the same as operations in
+Yii's terminology.
+
+Roles can be assigned to a user. Roles can also be assigned to other roles. This creates a parent-child role
+relationship in which all of the child roles are also indirectly assigned to the user who is assigned the parent role.
+
+Permissions can be assigned to roles. In a parent-child relationship, all of the permissions of the parent role, along
+with permissions of all the child roles, are carried over to the user who is assigned the parent role.
+
+This hierarchy allows for a very flexible RBAC scheme to be built into any Yii based site. It can be used together with
+custom filtering (or using Yii's default 'accessControl' filter) to allow or deny access to specific controller
+actions. This module also provides methods for fine grain control of authorization. For example, we can check if a user
+has a specific permission, and display a portion of the overall layout based on this permission.
+
+As a final word, you, as a developer, must understand that this module was created with a purpose to better understand
+the tools that Yii provides for authorization. It is not an end-all-and-be-all solution. So use it carefully, testing
+everything before putting it on a production machine.
+
 
 
 ==------------------==
@@ -29,7 +49,19 @@ Authors:
 ==------------------==
 
 1.) Extract and place the folder 'simple_rbac' (with all it's contents) into 'protected/modules' folder. If the folder
-'modules' does not exist, create it.
+'modules' does not exist, create it. You should have the following directory structure:
+
+    protected/modules/simple_rbac/.
+    protected/modules/simple_rbac/..
+    protected/modules/simple_rbac/components/
+    protected/modules/simple_rbac/controllers/
+    protected/modules/simple_rbac/css/
+    protected/modules/simple_rbac/extensions/
+    protected/modules/simple_rbac/images/
+    protected/modules/simple_rbac/models/
+    protected/modules/simple_rbac/views/
+    protected/modules/simple_rbac/README.md
+    protected/modules/simple_rbac/Simple_rbacModule.php
 
 2.) In the file 'protected/config/main.php', a few sub-arrays should be modified.
 
@@ -43,6 +75,7 @@ a.) Instruct Yii where to find Simple RBAC model classes, and tell Yii of the ex
         'application.modules.simple_rbac.models.forms.*',
         'application.modules.simple_rbac.models.db_tables.*',
         'application.modules.simple_rbac.models.data_providers.*',
+        ...
     ),
     ...
     'modules' => array(
@@ -50,6 +83,7 @@ a.) Instruct Yii where to find Simple RBAC model classes, and tell Yii of the ex
        'simple_rbac' => array(
            'setup' => true,
        ),
+       ...
     ),
     ...
 
@@ -72,7 +106,7 @@ connection to store the necessary tables and data. For example:
     ),
     ...
 
-This assumes that there is a MysSQL server running at localhost (port 3306), and that a database named 'test_database'
+This assumes that there is a MySQL server running at 'localhost' (port 3306), and that a database named 'test_database'
 exists, and is accessible by user 'sample_user' (with password 'user_password').
 
 NOTE: Simple RBAC module will work with a database table prefix or without it. So, a table prefix is optional, and
@@ -114,27 +148,27 @@ enabled, then you probably will have to access the install action via:
 
 You will get a list of tables, along with their status ('exists', or 'does not exist'). If all tables are marked as
 'exists', then the installation went successfully. If something went wrong, you can try uninstalling (see section
-'D - Uninstall' below), and repeating the whole process.
+'C - Uninstall' below), and repeating the whole process.
 
 If the installation action was successful, comment out (or remove) the following configuration setting:
 
     'setup' => true,
 
-in the sub-array 'simple_rbac' in file 'protected/config/main.php'. Until you do that, you will not be able to access
-the administration panel of Simple RABC module. It is a safety percussion.
+in the sub-array 'simple_rbac' in the file 'protected/config/main.php'. Until you do that, you will not be able to
+access the administration panel of Simple RABC module. It is a safety precussion.
 
 4.) Modify the site's controller default login action (or whatever action used for logging in at your site) to use
 this module's 'SimpleRbacLoginForm' model. It should look something similar to the following:
 
-    /**
-     * Displays the login page
+    /*
+     * Displays the login page.
      */
     public function actionLogin()
     {
         $model = new SimpleRbacLoginForm();
 
         // if it is ajax validation request
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
+        if ((isset($_POST['ajax'])) && ($_POST['ajax'] === 'login-form')) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
@@ -142,12 +176,14 @@ this module's 'SimpleRbacLoginForm' model. It should look something similar to t
         // collect user input data
         if (isset($_POST['SimpleRbacLoginForm'])) {
             $model->attributes = $_POST['SimpleRbacLoginForm'];
+
             // validate user input and redirect to the previous page if valid
-            if ($model->validate() && $model->login())
+            if (($model->validate()) && ($model->login()))
                 $this->redirect(Yii::app()->user->returnUrl);
         }
+
         // display the login form
-        $this->render('login', array('model'=> $model));
+        $this->render('login', array('model'=> $model,));
     }
 
 5.) Optionally, add a menu entry for easy access to the Simple RBAC module's administration page:
@@ -159,8 +195,8 @@ this module's 'SimpleRbacLoginForm' model. It should look something similar to t
                 ...
                 array(
                     'label'   => Yii::t('main','Admin'),
-                    'url'     => array('/simple_rbac/admin/users'),
-                    'visible' => SRUser::checkAccess('admin')
+                    'url'     => array('/simple_rbac/admin/users',),
+                    'visible' => SRUser::checkAccess('admin'),
                 ),
                 ...
             ),
@@ -173,7 +209,7 @@ this module's 'SimpleRbacLoginForm' model. It should look something similar to t
 || C - Uninstall ||
 ==---------------==
 
-To uninstall (i.e. remove all created tables and their data), go to:
+To uninstall (i.e. remove all created tables and their data from the DB), go to the following URL:
 
     http://your-site.com/simple_rbac/admin/uninstall
 
@@ -192,11 +228,230 @@ and undo all the changes that you have made to the 'protected/config/main.php' f
 || D - Usage ||
 ==-----------==
 
+1.) Example of using Yii's default 'accessControl' filter.
+
+    class MainController extends CController
+    {
+        /*
+         * http://www.yiiframework.com/doc/api/1.1/CController#filters-detail
+         * http://www.yiiframework.com/doc/api/1.1/CController#filterAccessControl-detail
+         *
+         * public array filters()
+         *
+         * {return}
+         *     array: a list of filter configurations.
+         *
+         * Description:
+         *     Returns the filter configurations.
+         *
+         *     By overriding this method, child classes can specify filters to be applied to actions.
+         *
+         *     This method returns an array of filter specifications. Each array element specifies a single filter.
+         *
+         *     For a method-based filter (called inline filter), it is specified as
+         *         'FilterName[ +|- Action1, Action2, ...]',
+         *     where the '+' ('-') operators describe which actions should be (should not be) applied with the filter.
+         *
+         *     For a class-based filter, it is specified as an array like the following:
+         *
+         *         array(
+         *             'FilterClass[ +|- Action1, Action2, ...]',
+         *             'name1'=>'value1',
+         *             'name2'=>'value2',
+         *             ...
+         *         )
+         *
+         *     where the name-value pairs will be used to initialize the properties of the filter.
+         *
+         *     Note, in order to inherit filters defined in the parent class, a child class needs to merge the parent
+         *     filters with child filters using functions like array_merge().
+         */
+        public function filters()
+        {
+            return array(
+                'accessControl',
+            );
+        }
+
+        /*
+         * http://www.yiiframework.com/doc/api/1.1/CController#accessRules-detail
+         * http://www.yiiframework.com/doc/api/1.1/CAccessControlFilter
+         *
+         * public array accessRules()
+         *
+         * {return}
+         *     array: list of access rules. See CAccessControlFilter for details about rule specification.
+         *
+         * Description:
+         *     Returns the access rules for this controller. Override this method if you use the accessControl filter.
+         */
+        public function accessRules()
+        {
+            return array(
+                array(
+                    'allow',
+                    'actions' => array('users', 'admin',),
+                    'roles'   => array('admin',),
+                ),
+                array(
+                    'allow',
+                    'actions' => array('forum', 'addForumPost',),
+                    'roles'   => array('authenticated',),
+                ),
+                array(
+                    'allow',
+                    'actions' => array('forum',),
+                    'roles'   => array('guest',),
+                ),
+                array(
+                    'allow',
+                    'actions' => array('specialPrivatePage'),
+                    'users'   => array('username_a', 'username_b', 'username_c',),
+                ),
+                array(
+                    'deny',
+                    'actions' => array('users', 'admin', 'forum', 'addForumPost', 'specialPrivatePage',),
+                    'users'   => array('*',),
+                ),
+            );
+        }
+
+        public function actionUsers()
+        {
+            // do something when the 'users' action is called
+        }
+
+        public function actionAdmin()
+        {
+            // do something when the 'admin' action is called
+        }
+
+        public function actionForum()
+        {
+            // do something when the 'forum' action is called
+        }
+
+        public function actionAddForumPost()
+        {
+            // do something when the 'addForumPost' action is called
+        }
+
+        public function actionSpecialPrivatePage()
+        {
+            // do something when the 'specialPrivatePage' action is called
+        }
+    }
+
+Now, lets see what can be accessed and by who.
+
+    main/users, main/admin - accessible by all users who are assigned the 'admin' role.
+    main/forum, main/addForumPost - accessible by all users who are assigned the 'authenticated' role; 'authenticated'
+        is a default role, which is assigned to a user based on a business rule; if a user is not a guest (i.e. he is
+        authenticated), then he will be assigned the 'authenticated' role automatically.
+    main/forum - accessible by all users who are assigned the 'guest' role; this role is also assigned to a user based
+        on a business rule; if a user is a guest (i.e. he is not authenticated), he will be assigned the 'guest' role
+        automatically.
+    main/specialPrivatePage - accessible by users with a username 'username_a', or 'username_b', or 'username_c'.
+
+The access rules are processed from top to bottom. If one rule is matched, then the process stops, and that rule's
+action is executed (the action is either 'allow' or 'deny'). If none of the first four rules are matched, then we come
+to the last rule:
+
+    array(
+        'deny',
+        'actions' => array('users', 'admin', 'forum', 'addForumPost', 'specialPrivatePage',),
+        'users'   => array('*',),
+    ),
+
+This will always match, because the '*' character targets all users. You could also use the '?' character to specify
+guest users. If this was not added to the end, then, by default, everything would be accessible (since we did not
+specify what to deny). Other possibilities are:
+
+    // If we got here, deny everything to everyone.
+    array(
+        'deny',
+    ),
+
+or
+
+    // If we got here, deny everything to users who are assigned the default 'guest' role.
+    array(
+        'deny',
+        'roles' => array('guest',),
+    ),
+
+or
+
+    // If we got here, deny everything to guest users (not authenticated users).
+    array(
+        'deny',
+        'users' => array('?',),
+    ),
+
+NOTE: When specifying a list for the 'roles' parameter, not only can we include roles, but also the permissions. This
+is because Yii recognizes roles, tasks (not used in this module), and permissions (operations in Yii's terminlogy) as
+CAuthItem objects. Please see http://www.yiiframework.com/doc/api/1.1/CAuthItem for reference.
+
+2.) Example of using fine grain authorization control.
+
+One of the classes that this module defines is the SRUser class. To test for user authorization access details, SRUser
+provides a static method checkAccess(). To check if the current user has some authorization item (role, or permission)
+assigned to him, we can do the following:
+
+    if (SRUser::checkAccess('admin')) {
+        // The user is assigned the 'admin' authorization item (in this case, 'admin' is a role).
+        // Do something that the adminsitrator can do.
+    }
+
+or
+
+    if (SRUser::checkAccess('can_edit_commercial_block')) {
+        // The user is assigned the 'can_edit_commercial_block' authorization item. This might be a permission.
+        // Commercial block editing code (or HTML) goes here.
+    }
+
+3.) Accessing and managing of user information.
+
+The SRUser class provides a method to retrieve a user and his additonal information with an easy to use method. Note,
+if the additional information does not exist, you must first create it.
+
+    $user = SRUser::getUser('admin');
+
+    if (!isset($user->userInfo->user_id)) {
+        echo 'userInfo relations is undefined; creating a new one...<br />';
+
+        $userInfo = new SimpleRbacUsersInfoDbTable();
+        $userInfo->user_id    = $user->id;
+        $userInfo->first_name = 'YourFirstName';
+        $userInfo->save();
+
+        $user = SRUser::getUser('admin');
+    } else {
+        echo 'userInfo relation is defined; retrieving stored data...<br />';
+    }
+
+    echo 'User id: '.$user->userInfo->user_id.'<br />';
+    echo 'First name: '.$user->userInfo->first_name.'<br />';
+
+    $user->userInfo->last_name = 'YourLastName';
+    $user->userInfo->save();
+
+    $user = SRUser::getUser('admin');
+    echo 'Last name: '.$user->userInfo->lastName.'<br />';
+
 
 
 ==----------------==
 || E - Change log ||
 ==----------------==
+
+[22.09.2012]
++ Added documentation to the README.md file.
++ Fixed bug where a non-static method was called statically.
++ If userInfo is not defined (i.e. there is no userInfo record connected to a user ID), we display empty strings for
+attribute values.
++ Added static methods tableName_s() to models 'SimpleRbacUsersDbTable', and 'SimpleRbacUsersInfoDbTable'.
++ Simplified rules in the admin controller's accessRules() method.
 
 [15.09.2012]
 + Added pages user roles, and user info.

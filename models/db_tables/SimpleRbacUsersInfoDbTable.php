@@ -17,9 +17,19 @@ class SimpleRbacUsersInfoDbTable extends CActiveRecord
         return parent::model($className);
     }
 
-    public function tableName()
+    /*
+     * This function is necessary for when we want to get the table name without initializing the class. Why? Beucase
+     * if the table does not exist in the DB, and we initialize the class, it will give you an error (the constructor
+     * tries to read the table specified by tableName() method).
+     */
+    public static function tableName_s()
     {
         return '{{simple_rbac_users_info}}';
+    }
+
+    public function tableName()
+    {
+        return self::tableName_s();
     }
 
     public function primaryKey()
