@@ -34,7 +34,7 @@ $this->widget(
                      (
                          'imageUrl' => $modulePath.'/images/deleteIcon24.png',
                          'url'      => 'Yii::app()->createUrl("simple_rbac/admin/revokeRoleFromUser", array("username" => "'.$username.'", "role" => $data["name"],))',
-                         'visible'  => '!(($data["name"] === "admin") && (Yii::app()->user->id) === 1)',
+                         'visible'  => '!(($data["name"] === "admin") && (SRUser::getUserId("'.$username.'") === 1))',
                      ),
                  ),
                  'headerHtmlOptions' => array(
