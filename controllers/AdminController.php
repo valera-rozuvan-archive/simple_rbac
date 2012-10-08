@@ -322,7 +322,7 @@ class AdminController extends CController
                 // role is invalid, validation will raise an error (we check if child permission is already assigned
                 // to parent role).
                 if (($model->validate(array('parentRole'))) && ($model->validate(array('childPermission')))) {
-                    SRUser::assignPermission($model->parentRole, $model->childPermission);
+                    SRUser::assignChildPermission($model->parentRole, $model->childPermission);
                     $this->redirect(array('admin/childPermissions', 'roleName' => $model->parentRole,));
                 }
             }

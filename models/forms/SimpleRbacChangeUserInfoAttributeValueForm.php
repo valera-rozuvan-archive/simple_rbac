@@ -41,11 +41,8 @@ class SimpleRbacChangeUserInfoAttributeValueForm extends CFormModel
     {
         if ((!isset($this->username)) || ($this->username === ''))
             $this->addError($attribute, 'Username is not specified.');
-        else {
-            $user = SRUser::getUser($this->username);
-            if ($user === null)
-                $this->addError($attribute, 'The specified username does not belong to a user.');
-        }
+        else if (!SRUser::userExists($this->username))
+            $this->addError($attribute, 'The specified username does not belong to a user.');
     }
 
     /**
@@ -54,11 +51,11 @@ class SimpleRbacChangeUserInfoAttributeValueForm extends CFormModel
      */
     public function ValidatorAttribute($attribute, $params)
     {
-        if ($this->attribute === '')
+        if ((!isset($this->attribute)) || ($this->attribute === ''))
             $this->addError($attribute, 'Attribute can\'t be empty.');
-        else if ($this->attribute === 'user_id')
+        else if (SRUser::isSpecialUserInfoAttribute($this->attribute))
             $this->addError($attribute, 'You can\'t change "user_id" attribute.');
-        else if (!in_array($this->attribute, array_keys(SimpleRbacUsersInfoDbTable::model()->getAttributes())))
+        else if (!SRUser::userInfoAttributeExists($this->attribute))
             $this->addError($attribute, 'Attribute does not exist in the DB table.');
     }
 }

@@ -36,15 +36,15 @@ class SimpleRbacNewRoleForm extends CFormModel
      */
     public function ValidatorRoleName($attribute, $params)
     {
-        if ($this->roleName === '')
+        if ((!isset($this->roleName)) || ($this->roleName === ''))
             $this->addError($attribute, 'Role name can\'t be empty.');
         else if (preg_match('/[^\w]/', $this->roleName))
             $this->addError($attribute, 'Role name can contain only alphanumeric characters, and the "_" character.');
         else if (strlen($this->roleName) > 20)
             $this->addError($attribute, 'Role name can contain a maximum of 20 characters.');
-        else if (in_array($this->roleName, array_keys(Yii::app()->authManager->roles)))
+        else if (SRUser::isRole($this->roleName))
             $this->addError($attribute, 'Role with the name "'.$this->roleName.'" already exists.');
-        else if (in_array($this->roleName, array_keys(Yii::app()->authManager->getAuthItems(0))))
+        else if (SRUser::isPermission($this->roleName))
             $this->addError($attribute, 'Permission with the name "'.$this->roleName.'" already exists. Role can\'t have the same name.');
     }
 }

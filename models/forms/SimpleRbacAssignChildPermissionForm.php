@@ -38,7 +38,7 @@ class SimpleRbacAssignChildPermissionForm extends CFormModel
     {
         if ((!isset($this->parentRole)) || ($this->parentRole === ''))
             $this->addError($attribute, 'Parent role is not specified.');
-        else if (!in_array($this->parentRole, array_keys(Yii::app()->authManager->roles)))
+        else if (!SRUser::isRole($this->parentRole))
             $this->addError($attribute, 'Parent role does not exist.');
     }
 
@@ -48,11 +48,11 @@ class SimpleRbacAssignChildPermissionForm extends CFormModel
      */
     public function ValidatorChildPermission($attribute, $params)
     {
-        if ($this->childPermission === '')
+        if ((!isset($this->childPermission)) || ($this->childPermission === ''))
             $this->addError($attribute, 'Child permission is not specified.');
-        else if (!in_array($this->childPermission, array_keys(Yii::app()->authManager->getAuthItems(0))))
+        else if (!SRUser::isPermission($this->childPermission))
             $this->addError($attribute, 'Child permission does not exist.');
-        else if (in_array($this->childPermission, SRUser::getChildPermissions($this->parentRole)))
+        else if (SRUser::isChildOfRole($this->parentRole, $this->childPermission))
             $this->addError($attribute, 'This child permission is already assigned to the parent role.');
     }
 }

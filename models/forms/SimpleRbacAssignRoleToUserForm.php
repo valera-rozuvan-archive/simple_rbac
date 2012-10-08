@@ -38,11 +38,8 @@ class SimpleRbacAssignRoleToUserForm extends CFormModel
     {
         if ((!isset($this->username)) || ($this->username === ''))
             $this->addError($attribute, 'Username is not specified.');
-        else {
-            $user = SRUser::getUser($this->username);
-            if ($user === null)
-                $this->addError($attribute, 'The specified username does not belong to a user.');
-        }
+        else if (!SRUser::userExists($this->username))
+            $this->addError($attribute, 'The specified username does not belong to a user.');
     }
 
     /**
@@ -51,16 +48,13 @@ class SimpleRbacAssignRoleToUserForm extends CFormModel
      */
     public function ValidatorRole($attribute, $params)
     {
-        if ($this->role === '')
+        if ((!isset($this->role)) || ($this->role === ''))
             $this->addError($attribute, 'Role name can\'t be empty.');
-        else if (in_array($this->role, array('guest', 'authenticated',)))
-            $this->addError($attribute, 'You can\'t assign a default role.');
-        else if (!in_array($this->role, array_keys(Yii::app()->authManager->roles)))
+        else if (!SRUser::isRole($this->role))
             $this->addError($attribute, 'Role with the name "'.$this->role.'" does not exists.');
-        else {
-            $user = SRUser::getUser($this->username);
-            if (Yii::app()->authManager->isAssigned($this->role, $user->id))
-                $this->addError($attribute, 'Role with the name "'.$this->role.'" is already assigned to the username "'.$this->username.'".');
-        }
+        else if (SRUser::isDefaultRole($this->role))
+            $this->addError($attribute, 'You can\'t assign a default role.');
+        else if (SRUser::roleIsAssignedToUser($this->username, $this->role))
+            $this->addError($attribute, 'Role with the name "'.$this->role.'" is already assigned to the username "'.$this->username.'".');
     }
 }

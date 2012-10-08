@@ -38,7 +38,7 @@ class SimpleRbacAssignChildRoleForm extends CFormModel
     {
         if ((!isset($this->parentRole)) || ($this->parentRole === ''))
             $this->addError($attribute, 'Parent role is not specified.');
-        else if (!in_array($this->parentRole, array_keys(Yii::app()->authManager->roles)))
+        else if (!SRUser::isRole($this->parentRole))
             $this->addError($attribute, 'Parent role does not exist.');
     }
 
@@ -48,17 +48,17 @@ class SimpleRbacAssignChildRoleForm extends CFormModel
      */
     public function ValidatorChildRole($attribute, $params)
     {
-        if ($this->childRole === '')
+        if ((!isset($this->childRole)) || ($this->childRole === ''))
             $this->addError($attribute, 'Child role is not specified.');
         else if ($this->parentRole === $this->childRole)
             $this->addError($attribute, 'Parent role can\'t be a child of itself.');
-        else if (!in_array($this->childRole, array_keys(Yii::app()->authManager->roles)))
+        else if (!SRUser::isRole($this->childRole))
             $this->addError($attribute, 'Child role does not exist.');
-        else if (in_array($this->childRole, SRUser::getChildRoles($this->parentRole)))
+        else if (SRUser::isChildOfRole($this->parentRole, $this->childRole))
             $this->addError($attribute, 'This child role is already assigned to the parent role.');
-        else if (in_array($this->parentRole, SRUser::getChildRoles($this->childRole)))
+        else if (SRUser::isChildOfRole($this->childRole, $this->parentRole))
             $this->addError($attribute, 'This parent role is already assigned to the child role.');
-        else if (in_array($this->childRole, array('guest', 'authenticated',)))
+        else if (SRUser::isDefaultRole($this->childRole))
             $this->addError($attribute, 'Assigning default roles is not allowed.');
     }
 }

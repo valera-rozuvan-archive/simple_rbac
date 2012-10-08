@@ -94,7 +94,7 @@ SRUser::createUser('admin', 'zzz');
 
 <?/*
 SRUser::createPermission('anotherPermission4', 'Permission n 4.');
-SRUser::assignPermission('admin', 'anotherPermission4');
+SRUser::assignChildPermission('admin', 'anotherPermission4');
 
 SRUser::assignChildRole('admin', 'authenticated');
 SRUser::createRole('newRole', 'this is a new role');
@@ -106,7 +106,7 @@ SRUser::assignChildRole('newRole', 'subRole');
 SRUser::createUser('grand', 'lll', array('newRole'));
 
 SRUser::createPermission('coolPermission', 'you can do cool things with this permission');
-SRUser::assignPermission('newRole', 'coolPermission');
+SRUser::assignChildPermission('newRole', 'coolPermission');
 
 $role = Yii::app()->authManager->roles['admin'];
 
@@ -338,7 +338,7 @@ for ($i = 0; $i <= 19; $i++) {
 </pre>*/?>
 
 <?
-
+/**
 $user = SRUser::getUser('admin');
 
 $auth = $auth = Yii::app()->authManager;
@@ -348,5 +348,17 @@ print_r(array_keys($auth->getAuthAssignments($user->id)));
 echo '<br />';
 
 echo 'User ID: '.Yii::app()->user->id;
+*/
+?>
+
+
+<?
+
+function myPrintR(array $ar)
+{
+    print_r($ar);
+}
+
+myPrintR(array('one' => 1, 'two' => 2, 'three' => 3,));
 
 ?>

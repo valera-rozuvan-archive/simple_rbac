@@ -36,13 +36,13 @@ class SimpleRbacNewUserForm extends CFormModel
      */
     public function ValidatorUsername($attribute, $params)
     {
-        if ($this->username === '')
+        if ((!isset($this->username)) || ($this->username === ''))
             $this->addError($attribute, 'Username can\'t be empty.');
         else if (preg_match('/[^\w]/', $this->username))
             $this->addError($attribute, 'Username can contain only alphanumeric characters, and the "_" character.');
         else if (strlen($this->username) > 16)
             $this->addError($attribute, 'Username can contain a maximum of 16 characters.');
-        else if (SRUser::getUser($this->username) !== null)
+        else if (SRUser::userExists($this->username))
             $this->addError($attribute, 'The user with username "'.$this->username.'" already exists.');
     }
 
@@ -52,7 +52,7 @@ class SimpleRbacNewUserForm extends CFormModel
      */
     public function ValidatorPassword($attribute, $params)
     {
-        if ($this->password === '')
+        if ((!isset($this->password)) || ($this->password === ''))
             $this->addError($attribute, 'Password can\'t be empty');
         else if (preg_match('/[\s]/', $this->password))
             $this->addError($attribute, 'Password can\'t contain whitespace characters (space, tab, or newline).');

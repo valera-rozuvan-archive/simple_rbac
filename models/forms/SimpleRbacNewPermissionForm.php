@@ -36,15 +36,15 @@ class SimpleRbacNewPermissionForm extends CFormModel
      */
     public function ValidatorPermissionName($attribute, $params)
     {
-        if ($this->permissionName === '')
+        if ((!isset($this->permissionName)) || ($this->permissionName === ''))
             $this->addError($attribute, 'Permission name can\'t be empty.');
         else if (preg_match('/[^\w]/', $this->permissionName))
             $this->addError($attribute, 'Permission name can contain only alphanumeric characters, and the "_" character.');
         else if (strlen($this->permissionName) > 20)
             $this->addError($attribute, 'Permission name can contain a maximum of 20 characters.');
-        else if (in_array($this->permissionName, array_keys(Yii::app()->authManager->getAuthItems(0))))
+        else if (SRUser::isPermission($this->permissionName))
             $this->addError($attribute, 'Permission with the name "'.$this->permissionName.'" already exists.');
-        else if (in_array($this->permissionName, array_keys(Yii::app()->authManager->roles)))
+        else if (SRUser::isRole($this->permissionName))
             $this->addError($attribute, 'Role with the name "'.$this->permissionName.'" already exists. Permission can\'t have the same name.');
     }
 }

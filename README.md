@@ -5,11 +5,11 @@
 
 Version:
 
-    1.2
+    1.3
 
 Date:
 
-    Sun Sep 23 23:58:49 EEST 2012
+    Mon Oct  8 06:46:58 EEST 2012
 
 Authors:
 
@@ -441,9 +441,55 @@ if the additional information does not exist, you must first create it.
 
 
 
+==------------------------==
+|| E - Database structure ||
+==------------------------==
+
+a.) General information
+The tables '{{AuthItem}}', '{{AuthItemChild}}', and '{{AuthAssignment}}' are provided by The Yii framework. Their
+defintions can be found in the file 'framework/web/auth/schema-mysql.sql'. It is not advisable to change the structure
+of these tables, because the component authManager (class CDbAuthManager) was built specifically to work with them.
+
+Table {{simple_rbac_users}}, {{simple_rbac_users_info}} are custom created user tables.and  stores the basic information about the user. (user ID, usrename, password, status,
+last_access date, and registered date).
+
+NOTE: The surrounding squgy brackets allow for the use of DB table prefixes.
+
+b.) Details
+
+AuthAssignment table: this table contains the connection between users and roles (more generally, authItems). Itemname
+is the name of the role (defined in table {{AuthItem}}), and userid is the ID of the user (defined in
+table {{simple_rbac_users}}).
+
+AuthItem table: this table stores information about a single authItem. In the case of our module, only permissions, and
+roles are used. name is how the authItem is referenced, type specifies if it is a role (type = 2) or a permission
+(type = 0), description is used for a short description of what the authItem is for (it can be left blank), and bizRule
+can be a PHP code snippet which is used to assign the authItem ot a user. BizRules are used for default roles.
+
+AuthItemChild table: defines the relationship between authItems. I.e. multiple roles can be assigned to a role, and
+multiple permissions can be asigned to a role. Assigning roles or permissions circularly is not allowed. Also, the
+design of this module only provides for assigning roles to a role, and permissions to a role. Other combinations are
+possible in theory, but are not implemented.
+
+simple_rbac_users table: stores the basic information about the user - user ID, usrename, password, status, last access
+date, and registered date.
+
+simple_rbac_users_info table: additional information about a user. It has a one to one relationship with the table
+simple_rbac_users. For now, extra columns (that will represent extra information) can be added ony via external DB
+management software (for example PHPMyAdmin). However, editing the values for any available field from this table's
+structure is possible from within the administration panel.
+
+
+
 ==----------------==
-|| E - Change log ||
+|| F - Change log ||
 ==----------------==
+
+[08.10.2012]
++ Added static helper methods to SRUser class.
++ Rewrote existing SRUser methods, and form validation methods to use new helper methods. This way code duplication is
+avoided.
++ Updated the documentation.
 
 [23.09.2012]
 + Can see a list of roles assigned to a user.

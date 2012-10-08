@@ -41,11 +41,8 @@ class SimpleRbacChangePasswordForm extends CFormModel
     {
         if ((!isset($this->username)) || ($this->username === ''))
             $this->addError($attribute, 'Username is not specified.');
-        else {
-            $user = SRUser::getUser($this->username);
-            if ($user === null)
-                $this->addError($attribute, 'The specified username does not belong to a user.');
-        }
+        else if (!SRUser::userExists($this->username))
+            $this->addError($attribute, 'The specified username does not belong to a user.');
     }
 
     /**
@@ -54,7 +51,7 @@ class SimpleRbacChangePasswordForm extends CFormModel
      */
     public function ValidatorNewPassword1($attribute, $params)
     {
-        if ($this->newPassword1 === '')
+        if ((!isset($this->newPassword1)) || ($this->newPassword1 === ''))
             $this->addError($attribute, 'New password can\'t be blank.');
     }
 
@@ -64,7 +61,7 @@ class SimpleRbacChangePasswordForm extends CFormModel
      */
     public function ValidatorNewPassword2($attribute, $params)
     {
-        if ($this->newPassword1 !== $this->newPassword2)
+        if ((!isset($this->newPassword2)) || ($this->newPassword1 !== $this->newPassword2))
             $this->addError($attribute, 'The second time you typed the new password incorrectly.');
     }
 }
