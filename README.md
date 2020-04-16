@@ -1,3 +1,9 @@
+# PROJECT DEPRECATED
+
+I initially authored this code in 2012-2013. Since then, more than 7 years have passed. I no longer write PHP code. The world has moved on. So has the Yii framework. RBAC is now part of Yii's core functionality. Check out [the docs](https://www.yiiframework.com/doc/guide/2.0/en/security-authorization#rbac). Also, there are some cool plugins for Yii RBAC, such as [yii2-redis-rbac](https://www.yiiframework.com/extension/yii2-redis-rbac), which further extend the functionality.
+
+For historical purpose, I am leaving everything below as it was :)
+
 ----------------------------------------------
 ---++++====== Simple RBAC module ======++++---
 
